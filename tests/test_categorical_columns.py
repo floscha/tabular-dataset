@@ -38,7 +38,6 @@ def test_encode_one_hot():
   tds = TabularDataset(df, categorical_columns=['C'])
   tds.categorical.encode(one_hot=True)
 
-  # print(tds.x)
   assert repr(tds.x) == repr(np.array([[1., 0.],
                                        [0., 1.],
                                        [0., 1.],
