@@ -16,11 +16,20 @@ def get_test_df():
 
 
 def test_column_names_are_correctly_set():
-    df = get_test_df()
+  df = get_test_df()
 
-    tds = TabularDataset(df, numerical_columns=['A'])
+  tds = TabularDataset(df, numerical_columns=['A'])
 
-    assert tds.numerical.column_names == ['A']
+  assert tds.numerical.column_names == ['A']
+
+
+def test_normalize():
+  df = get_test_df()
+
+  tds = TabularDataset(df, numerical_columns=['A'])
+  tds.numerical.normalize()
+
+  assert repr(tds.x) == repr(np.array([0., 0.5, 1., np.nan]).reshape(-1, 1))
 
 
 if __name__ == '__main__':
