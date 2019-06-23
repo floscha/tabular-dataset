@@ -8,5 +8,6 @@ setup(
     url='https://github.com/floscha/tabular-dataset',
     author='Florian Schäfer',
     author_email='florian.joh.schaefer@gmail.com',
-    packages=find_packages(exclude=('tests',))
+    packages=find_packages(exclude=('tests',)),
+    install_requires=open('requirements.txt').readlines()
 )
