@@ -14,3 +14,8 @@ class BinaryColumns:
        self.ds.df[column_name] = self.ds.df[column_name].map(mapping)
 
      return self.ds  # For fluent API
+
+  def impute(self):
+    self.ds.df[self.column_names] = self.ds.df[self.column_names].fillna(0)
+
+    return self.ds  # For fluent API
