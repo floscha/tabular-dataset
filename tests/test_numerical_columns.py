@@ -32,5 +32,32 @@ def test_normalize():
   assert repr(tds.x) == repr(np.array([0., 0.5, 1., np.nan]).reshape(-1, 1))
 
 
+def test_impute_with_median():
+  df = get_test_df()
+
+  tds = TabularDataset(df, numerical_columns=['A'])
+  tds.numerical.impute()
+
+  assert repr(tds.x) == repr(np.array([1, 2, 3, 2.]).reshape(-1, 1))
+
+
+def test_impute_with_mean():
+  df = get_test_df()
+
+  tds = TabularDataset(df, numerical_columns=['A'])
+  tds.numerical.impute(method='mean')
+
+  assert repr(tds.x) == repr(np.array([1, 2, 3, 2.]).reshape(-1, 1))
+
+
+def test_impute_with_zero():
+  df = get_test_df()
+
+  tds = TabularDataset(df, numerical_columns=['A'])
+  tds.numerical.impute(method='zero')
+
+  assert repr(tds.x) == repr(np.array([1, 2, 3, 0.]).reshape(-1, 1))
+
+
 if __name__ == '__main__':
     unittest.main()

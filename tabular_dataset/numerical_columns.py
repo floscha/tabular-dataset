@@ -22,3 +22,18 @@ class NumericalColumns:
     )
 
     return self.ds  # For fluent API
+
+  def impute(self, method='median'):
+    if method == 'median':
+      impute_value = self.ds.df[self.column_names].median()
+    elif method == 'mean':
+      impute_value = self.ds.df[self.column_names].mean()
+    elif method == 'zero':
+      impute_value = 0
+    else:
+      raise ValueError("Method not supported")
+
+    self.ds.df[self.column_names] = (self.ds.df[self.column_names]
+                                     .fillna(impute_value))
+
+    return self.ds  # For fluent API
