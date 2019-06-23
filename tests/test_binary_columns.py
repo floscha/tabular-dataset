@@ -23,5 +23,14 @@ def test_column_names_are_correctly_set():
     assert tds.binary.column_names == ['B']
 
 
+def test_encode():
+    df = get_test_df()
+
+    tds = TabularDataset(df, binary_columns=['B'])
+    tds.binary.encode()
+
+    assert repr(tds.x) == repr(np.array([-1, 1, -1, np.nan]).reshape(-1, 1))
+
+
 if __name__ == '__main__':
     unittest.main()
