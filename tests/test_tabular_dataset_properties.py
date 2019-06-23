@@ -18,17 +18,19 @@ def get_test_df():
 def test_x():
     df = get_test_df()
 
-    tds = TabularDataset(df, numerical_columns=['A'])
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
 
-    assert tds.numerical.column_names == ['A']
+    assert repr(tds.x) == repr(df[['A', 'B', 'C']].values)
 
 
 def test_y():
     df = get_test_df()
 
-    tds = TabularDataset(df, numerical_columns=['A'])
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
 
-    assert tds.numerical.column_names == ['A']
+    assert repr(tds.y) == repr(df[['target']].values)
 
 
 if __name__ == '__main__':

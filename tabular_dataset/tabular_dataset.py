@@ -23,3 +23,11 @@ class TabularDataset:
     )
 
     self.target = TargetColumns(self, target_column)
+
+  @property
+  def x(self):
+    return self.df[self.all.column_names].values
+
+  @property
+  def y(self):
+    return self.df[self.target.column_names].values
