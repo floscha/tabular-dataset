@@ -4,11 +4,12 @@ from tabular_dataset.all_columns import AllColumns
 from tabular_dataset.binary_columns import BinaryColumns
 from tabular_dataset.categorical_columns import CategoricalColumn
 from tabular_dataset.numerical_columns import NumericalColumns
+from tabular_dataset.target_columns import TargetColumns
 
 
 class TabularDataset:
   def __init__(self, data, numerical_columns=None, binary_columns=None,
-               categorical_columns=None):
+               categorical_columns=None, target_column: str = None):
     self.df = data
 
     self.numerical = NumericalColumns(self, numerical_columns or [])
@@ -20,3 +21,5 @@ class TabularDataset:
       self.binary.column_names +
       self.categorical.column_names
     )
+
+    self.target = TargetColumns(self, target_column)
