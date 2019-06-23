@@ -5,7 +5,7 @@ class BinaryColumns:
 
   def encode(self):
      for column_name in self.column_names:
-       column_values = self.ds.df[column_name].dropna().unique()
+       column_values = self.ds.df[column_name].unique()
        if len(column_values) != 2:
          raise ValueError("Binary variables need to have EXACTLY two " +
                           "different values (except for NaN values)")
