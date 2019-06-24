@@ -44,5 +44,24 @@ def test_encode_one_hot():
                                        [1., 0.]]))
 
 
+def test_impute_with_unk_token():
+  df = get_test_df()
+
+  tds = TabularDataset(df, categorical_columns=['B'])
+  tds.categorical.impute()
+
+  assert repr(tds.x) == repr(np.array([[0.], [1.], [0.], ['<UNK>']],
+                                      dtype='object'))
+
+
+def test_impute_with_mode():
+  df = get_test_df()
+
+  tds = TabularDataset(df, categorical_columns=['B'])
+  tds.categorical.impute(method='mode')
+
+  assert repr(tds.x) == repr(np.array([[0.], [1.], [0.], [0.]]))
+
+
 if __name__ == '__main__':
     unittest.main()
