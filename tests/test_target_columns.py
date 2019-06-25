@@ -36,7 +36,8 @@ def test_encode_one_hot():
   df = get_test_df()
 
   tds = TabularDataset(df, target_column='target')
-  tds.target.encode(one_hot=True)
+  tds.target.encode()
+  tds.target.one_hot()
 
   assert repr(tds.y) == repr(np.array([[1., 0., 0.],
                                        [0., 1., 0.],

@@ -1,4 +1,5 @@
-from tabular_dataset.util import encode_categorical_columns
+from tabular_dataset.util import (encode_categorical_columns,
+                                  one_hot_categorical_columns)
 
 
 class TargetColumns:
@@ -8,7 +9,12 @@ class TargetColumns:
 
     self._encoders = {}
 
-  def encode(self, one_hot: bool = False):
-    encode_categorical_columns(self, one_hot)
+  def encode(self):
+    encode_categorical_columns(self, self.column_names)
+
+    return self.ds  # For fluent API
+
+  def one_hot(self):
+    one_hot_categorical_columns(self, self.column_names)
 
     return self.ds  # For fluent API
