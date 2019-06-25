@@ -63,5 +63,15 @@ def test_impute_with_mode():
   assert repr(tds.x) == repr(np.array([[0.], [1.], [0.], [0.]]))
 
 
+def test_chaining_all_transformations():
+  df = get_test_df()
+
+  tds = TabularDataset(df, categorical_columns=['B'])
+  tds.categorical.impute()
+  tds.categorical.encode()
+
+  assert repr(tds.x) == repr(np.array([[0], [1], [0], [2]]))
+
+
 if __name__ == '__main__':
     unittest.main()

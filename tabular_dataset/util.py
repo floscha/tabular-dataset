@@ -10,8 +10,9 @@ def encode_categorical_columns(columns, one_hot: bool = False):
     columns._encoders[column_name] = (OneHotEncoder(sparse=False) if one_hot
                                       else LabelEncoder())
     if one_hot:
+      # FIXME Only convert columns with object type to str?
       encoded_values = columns._encoders[column_name].fit_transform(
-        columns.ds.df[columns.column_names].values.reshape(-1, 1))
+        columns.ds.df[columns.column_names].values.astype(str).reshape(-1, 1))
       # TODO Drop the first column per feature
       new_column_names = (columns._encoders[column_name]
                           .get_feature_names([column_name]))
@@ -20,8 +21,9 @@ def encode_categorical_columns(columns, one_hot: bool = False):
         columns.ds.df[new_column] = encoded_values[:, i]
       all_new_column_names.extend(new_column_names)
     else:
+      # FIXME Only convert columns with object type to str?
       encoded_values = columns._encoders[column_name].fit_transform(
-        columns.ds.df[columns.column_names].values.ravel())
+        columns.ds.df[columns.column_names].values.astype(str).ravel())
       columns.ds.df[column_name] = encoded_values
 
   if one_hot:
