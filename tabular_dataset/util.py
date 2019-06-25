@@ -9,7 +9,7 @@ def encode_categorical_columns(columns_obj, columns):
     encoder = LabelEncoder()
     # FIXME Only convert columns with object type to str?
     columns_obj.ds.df[column_name] = encoder.fit_transform(
-      columns_obj.ds.df[column_name].values.astype(str).ravel())
+      columns_obj.ds.df[column_name].values.astype(str))
     columns_obj._encoders[column_name] = encoder
 
 
