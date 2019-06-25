@@ -36,7 +36,8 @@ def test_encode_with_hashing():
   df = pd.DataFrame({'C': range(5)})
 
   tds = TabularDataset(df, categorical_columns=['C'])
-  tds.categorical.encode(hash_bins=3)
+  tds.categorical.encode()
+  tds.categorical.hash(bins=3)
 
   assert repr(tds.x) == repr(np.array([0, 1, 2, 0, 1]).reshape(-1, 1))
 
@@ -45,7 +46,8 @@ def test_encode_one_hot():
   df = get_test_df()
 
   tds = TabularDataset(df, categorical_columns=['C'])
-  tds.categorical.encode(one_hot=True)
+  tds.categorical.encode()
+  tds.categorical.one_hot()
 
   assert repr(tds.x) == repr(np.array([[1., 0.],
                                        [0., 1.],
@@ -57,7 +59,9 @@ def test_encode_one_hot_with_hashing():
   df = pd.DataFrame({'C': range(5)})
 
   tds = TabularDataset(df, categorical_columns=['C'])
-  tds.categorical.encode(one_hot=True, hash_bins=3)
+  tds.categorical.encode()
+  tds.categorical.hash(bins=3)
+  tds.categorical.one_hot()
 
   assert repr(tds.x) == repr(np.array([[1., 0., 0.],
                                        [0., 1., 0.],
