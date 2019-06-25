@@ -1,6 +1,9 @@
 from tabular_dataset.util import encode_categorical_columns
 
 
+UNK_TOKEN = '<UNK>'
+
+
 class CategoricalColumns:
   def __init__(self, ds, column_names):
     self.ds = ds
@@ -15,7 +18,7 @@ class CategoricalColumns:
 
   def impute(self, method='unk'):
     if method == 'unk':
-      fill_values = '<UNK>'
+      fill_values = UNK_TOKEN
     elif method == 'mode':
       fill_values = self.ds.df[self.column_names].mode().iloc[0, :]
     else:
