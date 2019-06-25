@@ -1,3 +1,5 @@
+from typing import Optional
+
 from tabular_dataset.util import encode_categorical_columns
 
 
@@ -11,8 +13,8 @@ class CategoricalColumns:
 
     self._encoders = {}
 
-  def encode(self, one_hot: bool = False):
-    encode_categorical_columns(self, one_hot)
+  def encode(self, one_hot: bool = False, hash_bins: Optional[int] = None):
+    encode_categorical_columns(self, one_hot, hash_bins)
 
     return self.ds  # For fluent API
 
