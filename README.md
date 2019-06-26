@@ -1,7 +1,7 @@
 # Tabular Dataset
 
 [![Build Status](https://travis-ci.com/floscha/tabular-dataset.svg?branch=master)](https://travis-ci.com/floscha/tabular-dataset)
-
+[![Coverage Status](https://coveralls.io/repos/github/floscha/tabular-dataset/badge.svg?branch=master)](https://coveralls.io/github/floscha/tabular-dataset?branch=master)
 
 ## Installation
 
