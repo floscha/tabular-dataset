@@ -16,5 +16,6 @@ class NumericalColumns(AbstractColumns):
         return impute(method=method)
 
     @transformation
-    def normalize(self, columns: Optional[list] = None, method: str = 'minmax'):
+    def normalize(self, columns: Optional[list] = None,
+                  method: str = 'minmax'):
         return normalize(scaler=self._scaler, method=method)
