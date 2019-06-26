@@ -1,6 +1,7 @@
 from typing import Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
+from tabular_dataset.columns.decorator import transformation
 from tabular_dataset.transformations.numerical import impute, normalize
 
 
@@ -10,15 +11,10 @@ class NumericalColumns(AbstractColumns):
 
     self._scaler = None
 
+  @transformation
   def impute(self, columns: Optional[list] = None, method: str = 'median'):
-    self.lineage.append((impute,
-                         {'columns': columns or self.column_names,
-                          'method': method}))
-    return self.ds  # For fluent API
+    return impute(method=method)
 
+  @transformation
   def normalize(self, columns: Optional[list] = None, method: str = 'minmax'):
-    self.lineage.append((normalize,
-                         {'columns': columns or self.column_names,
-                          'scaler': self._scaler,
-                          'method': method}))
-    return self.ds  # For fluent API
+    return normalize(scaler=self._scaler, method=method)

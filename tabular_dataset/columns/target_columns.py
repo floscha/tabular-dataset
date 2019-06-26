@@ -1,4 +1,5 @@
 from tabular_dataset.columns.abstract_columns import AbstractColumns
+from tabular_dataset.columns.decorator import transformation
 from tabular_dataset.transformations.categorical import encode, one_hot
 
 
@@ -8,13 +9,10 @@ class TargetColumns(AbstractColumns):
 
     self._encoders = {}
 
+  @transformation
   def encode(self):
-    self.lineage.append((encode,
-                         {'columns': self.column_names,
-                          'encoders': self._encoders}))
-    return self.ds  # For fluent API
+    return encode(encoders=self._encoders)
 
+  @transformation
   def one_hot(self):
-    self.lineage.append((one_hot,
-                         {'columns': self.column_names}))
-    return self.ds  # For fluent API
+    return one_hot()
