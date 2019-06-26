@@ -32,7 +32,7 @@ def test_encode():
     assert repr(tds.x) == repr(np.array([-1, 1, -1, np.nan]).reshape(-1, 1))
 
 
-def test_encode():
+def test_impute():
     df = get_test_df()
 
     tds = TabularDataset(df, binary_columns=['B'])
