@@ -1,6 +1,9 @@
 from sklearn import preprocessing
 
+from tabular_dataset.transformations.decorator import transformation
 
+
+@transformation
 def impute(df, columns: list, method: str):
   if method == 'median':
     impute_value = df.median()
@@ -14,6 +17,7 @@ def impute(df, columns: list, method: str):
   return df[columns].fillna(impute_value)
 
 
+@transformation
 def normalize(df, columns: list, scaler, method: str):
   if scaler is not None:
     raise ValueError("Values have already been normalized?!")

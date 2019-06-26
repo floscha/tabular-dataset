@@ -1,4 +1,4 @@
-class AbstractColumns():
+class AbstractColumns:
   def __init__(self, ds, column_names):
     self.ds = ds
     self.column_names = column_names
@@ -8,8 +8,7 @@ class AbstractColumns():
   def transform(self):
     df = self.ds.df[self.column_names].copy()
 
-    for transformation in self.lineage:
-      fn, kwargs = transformation
-      df = fn(df, **kwargs)
+    for transformation_fn in self.lineage:
+      df = transformation_fn(df)
 
     return df

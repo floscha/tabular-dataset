@@ -1,7 +1,12 @@
+from tabular_dataset.transformations.decorator import transformation
+
+
+@transformation
 def impute(df, columns: list):
   return df[columns].fillna(0)
 
 
+@transformation
 def encode(df, columns: list):
   for column_name in columns:
     column_values = df[column_name].dropna().unique()
