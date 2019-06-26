@@ -4,15 +4,15 @@ from tabular_dataset.transformations.categorical import encode, one_hot
 
 
 class TargetColumns(AbstractColumns):
-  def __init__(self, ds, column_names):
-    super().__init__(ds, column_names)
+    def __init__(self, ds, column_names):
+        super().__init__(ds, column_names)
 
-    self._encoders = {}
+        self._encoders = {}
 
-  @transformation
-  def encode(self):
-    return encode(encoders=self._encoders)
+    @transformation
+    def encode(self):
+        return encode(encoders=self._encoders)
 
-  @transformation
-  def one_hot(self):
-    return one_hot()
+    @transformation
+    def one_hot(self):
+        return one_hot()

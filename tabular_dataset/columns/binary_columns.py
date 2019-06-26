@@ -6,13 +6,13 @@ from tabular_dataset.transformations.binary import encode, impute
 
 
 class BinaryColumns(AbstractColumns):
-  def __init__(self, ds, column_names):
-    super().__init__(ds, column_names)
+    def __init__(self, ds, column_names):
+        super().__init__(ds, column_names)
 
-  @transformation
-  def encode(self, columns: Optional[list] = None):
-    return encode()
+    @transformation
+    def encode(self, columns: Optional[list] = None):
+        return encode()
 
-  @transformation
-  def impute(self, columns: Optional[list] = None):
-    return impute()
+    @transformation
+    def impute(self, columns: Optional[list] = None):
+        return impute()
