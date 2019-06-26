@@ -7,23 +7,23 @@ from tabular_dataset.transformations.categorical import (encode, hash, impute,
 
 
 class CategoricalColumns(AbstractColumns):
-  def __init__(self, ds, column_names):
-    super().__init__(ds, column_names)
+    def __init__(self, ds, column_names):
+        super().__init__(ds, column_names)
 
-    self._encoders = {}
+        self._encoders = {}
 
-  @transformation
-  def impute(self, columns: Optional[list] = None, method: str = 'unk'):
-    return impute(method=method)
+    @transformation
+    def impute(self, columns: Optional[list] = None, method: str = 'unk'):
+        return impute(method=method)
 
-  @transformation
-  def encode(self, columns: Optional[list] = None):
-    return encode(encoders=self._encoders)
+    @transformation
+    def encode(self, columns: Optional[list] = None):
+        return encode(encoders=self._encoders)
 
-  @transformation
-  def hash(self, columns: Optional[list] = None, bins: Optional[int] = None):
-    return hash(bins=bins)
+    @transformation
+    def hash(self, columns: Optional[list] = None, bins: Optional[int] = None):
+        return hash(bins=bins)
 
-  @transformation
-  def one_hot(self, columns: Optional[list] = None):
-    return one_hot()
+    @transformation
+    def one_hot(self, columns: Optional[list] = None):
+        return one_hot()

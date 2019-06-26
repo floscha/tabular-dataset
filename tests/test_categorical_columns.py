@@ -7,95 +7,95 @@ from tabular_dataset import TabularDataset
 
 
 def get_test_df():
-  return pd.DataFrame({
-     'A': list('abba') + [np.nan, np.nan],
-     'B': list('ccdd') + [np.nan, np.nan]
-   })
+    return pd.DataFrame({
+        'A': list('abba') + [np.nan, np.nan],
+        'B': list('ccdd') + [np.nan, np.nan]
+    })
 
 
 def test_column_names_are_correctly_set():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
 
-  assert tds.categorical.column_names == ['A', 'B']
+    assert tds.categorical.column_names == ['A', 'B']
 
 
 def test_encode():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
-  tds.categorical.encode()
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode()
 
-  assert repr(tds.x) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1],
-                                       [2, 2], [2, 2]],
-                                       # [np.nan, np.nan], [np.nan, np.nan]],
-                                       ))
+    assert repr(tds.x) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1],
+                                         [2, 2], [2, 2]],
+                                        # [np.nan, np.nan], [np.nan, np.nan]],
+                                        ))
 
 
 def test_encode_with_hashing():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
-  tds.categorical.encode()
-  tds.categorical.hash(bins=2)
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+    tds.categorical.hash(bins=2)
 
-  assert repr(tds.x) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1],
-                                       [0, 0], [0, 0]]))
+    assert repr(tds.x) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1],
+                                         [0, 0], [0, 0]]))
 
 
 def test_encode_one_hot():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
-  tds.categorical.encode()
-  tds.categorical.one_hot()
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+    tds.categorical.one_hot()
 
-  assert repr(tds.x) == repr(np.array([[1., 0., 0., 1., 0., 0.],
-                                       [0., 1., 0., 1., 0., 0.],
-                                       [0., 1., 0., 0., 1., 0.],
-                                       [1., 0., 0., 0., 1., 0.],
-                                       [0., 0., 1., 0., 0., 1.],
-                                       [0., 0., 1., 0., 0., 1.]]))
+    assert repr(tds.x) == repr(np.array([[1., 0., 0., 1., 0., 0.],
+                                         [0., 1., 0., 1., 0., 0.],
+                                         [0., 1., 0., 0., 1., 0.],
+                                         [1., 0., 0., 0., 1., 0.],
+                                         [0., 0., 1., 0., 0., 1.],
+                                         [0., 0., 1., 0., 0., 1.]]))
 
 
 def test_encode_one_hot_with_hashing():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
-  tds.categorical.encode()
-  tds.categorical.hash(bins=2)
-  tds.categorical.one_hot()
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+    tds.categorical.hash(bins=2)
+    tds.categorical.one_hot()
 
-  assert repr(tds.x) == repr(np.array([[1., 0., 1., 0.],
-                                       [0., 1., 1., 0.],
-                                       [0., 1., 0., 1.],
-                                       [1., 0., 0., 1.],
-                                       [1., 0., 1., 0.],
-                                       [1., 0., 1., 0.]]))
+    assert repr(tds.x) == repr(np.array([[1., 0., 1., 0.],
+                                         [0., 1., 1., 0.],
+                                         [0., 1., 0., 1.],
+                                         [1., 0., 0., 1.],
+                                         [1., 0., 1., 0.],
+                                         [1., 0., 1., 0.]]))
 
 
 def test_impute_with_unk_token():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
-  tds.categorical.impute()
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.impute()
 
-  assert repr(tds.x) == repr(np.array([['a', 'c'], ['b', 'c'], ['b', 'd'],
-                                       ['a', 'd'], ['<UNK>', '<UNK>'],
-                                       ['<UNK>', '<UNK>']],
-                                      dtype='object'))
+    assert repr(tds.x) == repr(np.array([['a', 'c'], ['b', 'c'], ['b', 'd'],
+                                         ['a', 'd'], ['<UNK>', '<UNK>'],
+                                         ['<UNK>', '<UNK>']],
+                                        dtype='object'))
 
 
 def test_impute_with_mode():
-  df = get_test_df()
+    df = get_test_df()
 
-  tds = TabularDataset(df, categorical_columns=['A', 'B'])
-  tds.categorical.impute(method='mode')
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.impute(method='mode')
 
-  assert repr(tds.x) == repr(np.array([['a', 'c'], ['b', 'c'], ['b', 'd'],
-                                       ['a', 'd'], ['a', 'c'], ['a', 'c']],
-                                      dtype='object'))
+    assert repr(tds.x) == repr(np.array([['a', 'c'], ['b', 'c'], ['b', 'd'],
+                                         ['a', 'd'], ['a', 'c'], ['a', 'c']],
+                                        dtype='object'))
 
 
 if __name__ == '__main__':
