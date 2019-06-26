@@ -1,10 +1,8 @@
 import pandas as pd
 
-from tabular_dataset.all_columns import AllColumns
-from tabular_dataset.binary_columns import BinaryColumns
-from tabular_dataset.categorical_columns import CategoricalColumns
-from tabular_dataset.numerical_columns import NumericalColumns
-from tabular_dataset.target_columns import TargetColumns
+from tabular_dataset.columns import (AllColumns,  BinaryColumns,
+                                     CategoricalColumns,  NumericalColumns,
+                                     TargetColumns)
 
 
 class TabularDataset:
@@ -18,12 +16,15 @@ class TabularDataset:
 
     self.all = AllColumns(self)
 
-    self.target = TargetColumns(self, target_column)
+    self.target = TargetColumns(self, [target_column])
 
   @property
   def x(self):
-    return self.df[self.all.column_names].values
+    return pd.concat([self.numerical.transform(),
+                      self.binary.transform(),
+                      self.categorical.transform()],
+                     axis=1).values
 
   @property
   def y(self):
-    return self.df[self.target.column_names].values
+    return self.target.transform().values
