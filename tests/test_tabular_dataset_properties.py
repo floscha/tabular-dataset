@@ -57,5 +57,45 @@ def test_y():
     assert repr(tds.y) == repr(df[['target']].values)
 
 
+def test_x_train():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    assert repr(tds.x_train) == repr(df[['A', 'B', 'C']].values)
+
+
+def test_y_train():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    assert repr(tds.y_train) == repr(df[['target']].values)
+
+
+def test_x_test():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data, numerical_columns=['A'],
+                         binary_columns=['B'], categorical_columns=['C'],
+                         target_column='target')
+
+    assert repr(tds.x_test) == repr(test_data[['A', 'B', 'C']].values)
+
+
+def test_y_test():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data, numerical_columns=['A'],
+                         binary_columns=['B'], categorical_columns=['C'],
+                         target_column='target')
+#
+    assert repr(tds.y_test) == repr(test_data[['target']].values)
+
+
 if __name__ == '__main__':
     unittest.main()

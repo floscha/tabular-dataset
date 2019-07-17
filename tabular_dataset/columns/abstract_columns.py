@@ -11,8 +11,9 @@ class AbstractColumns:
     def __len__(self):
         return len(self.column_names)
 
-    def transform(self):
-        df = self.ds.df[self.column_names].copy()
+    def transform(self, test: bool = False):
+        df = self.ds.test_df if test else self.ds.df
+        df = df[self.column_names].copy()
 
         for transformation_fn in self.lineage:
             df = transformation_fn(df)
