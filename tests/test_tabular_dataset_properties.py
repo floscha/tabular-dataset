@@ -15,6 +15,30 @@ def get_test_df():
     })
 
 
+def test_repr():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+    repr_output = repr(tds)
+
+    assert repr_output == ("TabularDataset (4 rows)\n" +
+                           "\tNumerical Columns: ['A']\n" +
+                           "\tBinary Columns: ['B']\n" +
+                           "\tCategorical Columns: ['C']\n" +
+                           "\tTarget Column: 'target'")
+
+
+def test_repr_with_multiple_target_columns():
+    df = get_test_df()
+
+    tds = TabularDataset(df, target_columns=['A', 'B'])
+    repr_output = repr(tds)
+
+    assert repr_output == ("TabularDataset (4 rows)\n" +
+                           "\tTarget Columns: ['A', 'B']")
+
+
 def test_x():
     df = get_test_df()
 
