@@ -7,12 +7,13 @@ class TargetColumns(AbstractColumns):
     def __init__(self, ds, column_names):
         super().__init__(ds, column_names)
 
-        self._encoders = {}
+        self._categorical_encoders = {}
+        self._one_hot_encoders = {}
 
     @transformation
     def encode(self):
-        return encode(encoders=self._encoders)
+        return encode(encoders=self._categorical_encoders)
 
     @transformation
     def one_hot(self):
-        return one_hot()
+        return one_hot(encoders=self._one_hot_encoders)

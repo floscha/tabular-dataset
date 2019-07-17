@@ -70,7 +70,7 @@ def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
             encoders[column_name] = ohe
         else:
             ohe = encoders[column_name]
-        new_column_names = list(ohe.get_feature_names(column_name))
+        new_column_names = list(ohe.get_feature_names([column_name]))
         encoded_columns.append(pd.DataFrame(ohe.transform(values),
                                             columns=new_column_names,
                                             # Make sure to retain the old index

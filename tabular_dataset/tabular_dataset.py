@@ -66,11 +66,6 @@ class TabularDataset:
 
     @property
     def x_test(self):
-        # import numpy as np
-        #
-        # return np.hstack([self.numerical.transform(test=True).values,
-        #                   self.binary.transform(test=True).values,
-        #                   self.categorical.transform(test=True).values])
         return pd.concat([self.numerical.transform(test=True),
                           self.binary.transform(test=True),
                           self.categorical.transform(test=True)],
