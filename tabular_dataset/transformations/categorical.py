@@ -60,7 +60,7 @@ def hash(df: pd.DataFrame, columns: list, bins: int) -> pd.DataFrame:
 
 @transformation
 def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
-            fit: bool = True) -> pd.DataFrame:
+            fit: bool = True, drop_first: bool = False) -> pd.DataFrame:
     encoded_columns = list()
     for column_name in columns:
         values = df[column_name].values.reshape(-1, 1)
@@ -71,10 +71,10 @@ def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
         else:
             ohe = encoders[column_name]
         new_column_names = list(ohe.get_feature_names([column_name]))
-        encoded_columns.append(pd.DataFrame(ohe.transform(values),
-                                            columns=new_column_names,
-                                            # Make sure to retain the old index
-                                            index=df[column_name].index))
-    # TODO Drop the first column per feature
-    df = pd.concat(encoded_columns, axis=1)
-    return df
+        new_columns = pd.DataFrame(ohe.transform(values),
+                                   columns=new_column_names,
+                                   # Make sure to retain the old index
+                                   index=df[column_name].index)
+        columnar_offset = 1 if drop_first else 0
+        encoded_columns.append(new_columns.iloc[:, columnar_offset:])
+    return pd.concat(encoded_columns, axis=1)

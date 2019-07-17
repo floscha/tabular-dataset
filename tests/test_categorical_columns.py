@@ -69,6 +69,21 @@ def test_encode_one_hot():
                                          [0., 0., 1., 0., 0., 1.]]))
 
 
+def test_encode_one_hot_drop_first():
+    df = get_test_df()
+
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+    tds.categorical.one_hot(drop_first=True)
+
+    assert repr(tds.x) == repr(np.array([[0., 0., 0., 0.],
+                                         [1., 0., 0., 0.],
+                                         [1., 0., 1., 0.],
+                                         [0., 0., 1., 0.],
+                                         [0., 1., 0., 1.],
+                                         [0., 1., 0., 1.]]))
+
+
 def test_encode_one_hot_no_fit():
     df = get_test_df()
     test_data = df.iloc[-2:]
