@@ -28,9 +28,19 @@ def test_encode():
     tds.categorical.encode()
 
     assert repr(tds.x) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1],
-                                         [2, 2], [2, 2]],
-                                        # [np.nan, np.nan], [np.nan, np.nan]],
-                                        ))
+                                         [2, 2], [2, 2]]))
+
+
+def test_encode_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data,
+                         categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+
+    _ = tds.x_train
+    assert repr(tds.x_test) == repr(np.array([[2, 2], [2, 2]]))
 
 
 def test_encode_with_hashing():
@@ -57,6 +67,20 @@ def test_encode_one_hot():
                                          [1., 0., 0., 0., 1., 0.],
                                          [0., 0., 1., 0., 0., 1.],
                                          [0., 0., 1., 0., 0., 1.]]))
+
+
+def test_encode_one_hot_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data,
+                         categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+    tds.categorical.one_hot()
+
+    _ = tds.x_train
+    assert repr(tds.x_test) == repr(np.array([[0., 0., 1., 0., 0., 1.],
+                                              [0., 0., 1., 0., 0., 1.]]))
 
 
 def test_encode_one_hot_with_hashing():
@@ -96,6 +120,19 @@ def test_impute_with_mode():
     assert repr(tds.x) == repr(np.array([['a', 'c'], ['b', 'c'], ['b', 'd'],
                                          ['a', 'd'], ['a', 'c'], ['a', 'c']],
                                         dtype='object'))
+
+
+def test_impute_with_mode_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data,
+                         categorical_columns=['A', 'B'])
+    tds.categorical.impute(method='mode')
+
+    _ = tds.x_train
+    assert repr(tds.x_test) == repr(np.array([['a', 'c'], ['a', 'c']],
+                                             dtype='object'))
 
 
 if __name__ == '__main__':

@@ -32,6 +32,17 @@ def test_encode():
     assert repr(tds.y) == repr(np.array([0, 1, 2, 0]).reshape(-1, 1))
 
 
+def test_encode_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data, target_column='target')
+    tds.target.encode()
+
+    _ = tds.y_train
+    assert repr(tds.y_test) == repr(np.array([2, 0]).reshape(-1, 1))
+
+
 def test_encode_one_hot():
     df = get_test_df()
 
@@ -43,6 +54,19 @@ def test_encode_one_hot():
                                          [0., 1., 0.],
                                          [0., 0., 1.],
                                          [1., 0., 0.]]))
+
+
+def test_encode_one_hot_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data, target_column='target')
+    tds.target.encode()
+    tds.target.one_hot()
+
+    _ = tds.y_train
+    assert repr(tds.y_test) == repr(np.array([[0., 0., 1.],
+                                              [1., 0., 0.]]))
 
 
 if __name__ == '__main__':

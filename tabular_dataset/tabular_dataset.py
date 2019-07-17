@@ -8,10 +8,11 @@ from tabular_dataset.columns import (AllColumns,  BinaryColumns,
 
 
 class TabularDataset:
-    def __init__(self, data, numerical_columns=None, binary_columns=None,
-                 categorical_columns=None, target_column: str = None,
-                 target_columns: List[str] = None):
+    def __init__(self, data, test_data=None, numerical_columns=None,
+                 binary_columns=None, categorical_columns=None,
+                 target_column: str = None, target_columns: List[str] = None):
         self.df = data  # TODO Copy data to avoid changing the original object?
+        self.test_df = test_data
 
         self.numerical = NumericalColumns(self, numerical_columns or [])
         self.binary = BinaryColumns(self, binary_columns or [])
@@ -54,3 +55,22 @@ class TabularDataset:
     @property
     def y(self):
         return self.target.transform().values
+
+    @property
+    def x_train(self):
+        return self.x
+
+    @property
+    def y_train(self):
+        return self.y
+
+    @property
+    def x_test(self):
+        return pd.concat([self.numerical.transform(test=True),
+                          self.binary.transform(test=True),
+                          self.categorical.transform(test=True)],
+                         axis=1).values
+
+    @property
+    def y_test(self):
+        return self.target.transform(test=True).values
