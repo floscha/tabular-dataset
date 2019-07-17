@@ -27,5 +27,6 @@ class CategoricalColumns(AbstractColumns):
         return hash(bins=bins)
 
     @transformation
-    def one_hot(self, columns: Optional[list] = None):
-        return one_hot(encoders=self._one_hot_encoders)
+    def one_hot(self, columns: Optional[list] = None,
+                drop_first: bool = False):
+        return one_hot(encoders=self._one_hot_encoders, drop_first=drop_first)
