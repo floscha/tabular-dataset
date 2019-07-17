@@ -5,6 +5,12 @@ class AbstractColumns:
 
         self.lineage = []
 
+    def __bool__(self):
+        return len(self) > 0
+
+    def __len__(self):
+        return len(self.column_names)
+
     def transform(self):
         df = self.ds.df[self.column_names].copy()
 
