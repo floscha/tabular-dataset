@@ -9,13 +9,16 @@ class NumericalColumns(AbstractColumns):
     def __init__(self, ds, column_names):
         super().__init__(ds, column_names)
 
+        self._impute_values = []
         self._scaler = None
 
     @transformation
     def impute(self, columns: Optional[list] = None, method: str = 'median'):
-        return impute(method=method)
+        return impute(method=method, impute_values=self._impute_values)
 
     @transformation
     def normalize(self, columns: Optional[list] = None,
                   method: str = 'minmax'):
-        return normalize(scaler=self._scaler, method=method)
+        # FIXME Passing scaler as a list to enable call be reference ist kind
+        # of a hack, so find a better solution.
+        return normalize(scalers=[self._scaler], method=method)

@@ -32,13 +32,33 @@ def test_normalize():
     assert repr(tds.x) == repr(np.array([[0.], [0.5], [1.], [np.nan]]))
 
 
+def test_normalize_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data, numerical_columns=['A'])
+    tds.numerical.normalize()
+
+    _ = tds.x_train
+    assert repr(tds.x_test) == repr(np.array([[1.], [np.nan]]))
+
+
 def test_impute_with_median():
     df = get_test_df()
 
     tds = TabularDataset(df, numerical_columns=['A'])
     tds.numerical.impute()
 
-    assert repr(tds.x) == repr(np.array([[1], [2], [3], [2.]]))
+
+def test_impute_with_median_no_fit():
+    df = get_test_df()
+    test_data = df.iloc[-2:]
+
+    tds = TabularDataset(df, test_data=test_data, numerical_columns=['A'])
+    tds.numerical.impute()
+
+    _ = tds.x_train
+    assert repr(tds.x_test) == repr(np.array([[3], [2.]]))
 
 
 def test_impute_with_mean():
