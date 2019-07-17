@@ -10,7 +10,6 @@ def impute(df, columns: list):
 def encode(df, columns: list):
     for column_name in columns:
         column_values = df[column_name].dropna().unique()
-        print(len(column_values))
         if len(column_values) != 2:
             raise ValueError("Binary variables need to have EXACTLY two " +
                              "different values (except for NaN values)")
