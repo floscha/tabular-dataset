@@ -24,5 +24,15 @@ def test_column_names_are_correctly_set():
     assert tds.all.column_names == ['A', 'B', 'C']
 
 
+def test_len_property():
+    df = get_test_df()
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'])
+
+    length = len(tds.all)
+
+    assert length == 3
+
+
 if __name__ == '__main__':
     unittest.main()
