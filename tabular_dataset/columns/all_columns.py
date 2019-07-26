@@ -1,6 +1,12 @@
-class AllColumns:
+from tabular_dataset.columns.abstract_columns import AbstractColumns
+
+
+class AllColumns(AbstractColumns):
     def __init__(self, ds):
         self.ds = ds
+
+    def transform(self, test: bool = False):
+        raise TypeError(f"'AllColumns' does not support 'transform()'")
 
     @property
     def column_names(self):
