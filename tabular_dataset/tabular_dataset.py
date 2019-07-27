@@ -74,3 +74,17 @@ class TabularDataset:
     @property
     def y_test(self):
         return self.target.transform(test=True).values
+
+    # --- Abbreviations for columns
+
+    @property
+    def num(self):
+        return self.numerical
+
+    @property
+    def bin(self):
+        return self.binary
+
+    @property
+    def cat(self):
+        return self.categorical

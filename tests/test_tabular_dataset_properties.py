@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 
 from tabular_dataset import TabularDataset
+from tabular_dataset.columns import (BinaryColumns, CategoricalColumns,
+                                     NumericalColumns)
 
 
 def get_test_df():
@@ -93,8 +95,35 @@ def test_y_test():
     tds = TabularDataset(df, test_data=test_data, numerical_columns=['A'],
                          binary_columns=['B'], categorical_columns=['C'],
                          target_column='target')
-#
+
     assert repr(tds.y_test) == repr(test_data[['target']].values)
+
+
+def test_num_abbreviation():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    assert isinstance(tds.num, NumericalColumns)
+
+
+def test_bin_abbreviation():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    assert isinstance(tds.bin, BinaryColumns)
+
+
+def test_cat_abbreviation():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    assert isinstance(tds.cat, CategoricalColumns)
 
 
 if __name__ == '__main__':
