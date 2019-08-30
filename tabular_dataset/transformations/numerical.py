@@ -38,12 +38,8 @@ def impute(df, columns: list, method: Optional[str] = None, fit: bool = True,
 def normalize(df, columns: list, scalers, method: str, fit: bool):
     scaler = scalers[0]
     if fit:
-        if scaler is not None:
-            raise ValueError("Values have already been normalized?!")
-
         if method == 'minmax':
             scaler = preprocessing.MinMaxScaler()
-            # TODO Save scaler
             df[columns] = scaler.fit_transform(df[columns])
             scalers[0] = scaler
         else:
