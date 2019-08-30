@@ -17,3 +17,11 @@ def encode(df, columns: list):
         mapping = {smaller_value: -1, bigger_value: 1}
         df[column_name] = df[column_name].map(mapping)
     return df
+
+
+@transformation
+def counts(df, columns: list):
+    for column_name in columns:
+        counts = df[column_name].value_counts()
+        df[column_name + '_count'] = df[column_name].map(counts)
+    return df

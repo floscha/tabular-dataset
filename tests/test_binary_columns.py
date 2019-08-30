@@ -32,6 +32,26 @@ def test_encode():
     assert repr(tds.x) == repr(np.array([-1, 1, -1, np.nan]).reshape(-1, 1))
 
 
+def test_counts_without_nan_values():
+    df = get_test_df()
+
+    tds = TabularDataset(df.dropna(), binary_columns=['B'])
+    tds.binary.counts()
+
+    assert repr(tds.x[:, 1]) == repr(np.array([2., 1., 2.]))
+
+
+def test_counts_without_nan_values():
+    df = get_test_df()
+
+    tds = TabularDataset(df, binary_columns=['B'])
+    tds.binary.encode()
+    tds.binary.impute()
+    tds.binary.counts()
+
+    assert repr(tds.x[:, 1]) == repr(np.array([2., 1., 2., 1.]))
+
+
 def test_impute():
     df = get_test_df()
 
