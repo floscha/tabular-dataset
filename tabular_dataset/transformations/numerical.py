@@ -1,13 +1,14 @@
 from typing import List, Optional
 
-from sklearn import preprocessing
+import pandas as pd
+from sklearn.preprocessing import MinMaxScaler
 
 from tabular_dataset.transformations.decorator import transformation
 
 
 @transformation
-def impute(df, columns: list, impute_values: List[float],
-           method: Optional[str] = None, fit: bool = True):
+def impute(df: pd.DataFrame, columns: List[str], impute_values: List[float],
+           method: Optional[str] = None, fit: bool = True) -> pd.DataFrame:
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")
@@ -35,11 +36,13 @@ def impute(df, columns: list, impute_values: List[float],
 
 
 @transformation
-def normalize(df, columns: list, scalers, method: str, fit: bool):
+def normalize(df: pd.DataFrame, columns: List[str],
+              scalers: List[MinMaxScaler], method: str, fit: bool) \
+              -> pd.DataFrame:
     scaler = scalers[0]
     if fit:
         if method == 'minmax':
-            scaler = preprocessing.MinMaxScaler()
+            scaler = MinMaxScaler()
             df[columns] = scaler.fit_transform(df[columns])
             scalers[0] = scaler
         else:

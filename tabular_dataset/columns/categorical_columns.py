@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
@@ -8,34 +8,39 @@ from tabular_dataset.transformations.categorical import (counts, encode,
 
 
 class CategoricalColumns(AbstractColumns):
-    def __init__(self, ds, column_names):
+    try:
+        from tabular_dataset import TabularDataset
+    except: pass  # noqa: E722
+
+    def __init__(self, ds: 'TabularDataset', column_names: List[str]):
         super().__init__(ds, column_names)
 
-        self._impute_values = []
-        self._categorical_encoders = {}
-        self._one_hot_encoders = {}
+        self._impute_values = []  # type: list
+        self._categorical_encoders = {}  # type: dict
+        self._one_hot_encoders = {}  # type: dict
 
     @transformation
-    def impute(self, columns: Optional[list] = None, method: str = 'unk'):
+    def impute(self, columns: Optional[List[str]] = None, method: str = 'unk'):
         return impute(method=method, impute_values=self._impute_values)
 
     @transformation
-    def encode(self, columns: Optional[list] = None):
+    def encode(self, columns: Optional[List[str]] = None):
         return encode(encoders=self._categorical_encoders)
 
     @transformation
-    def hash(self, columns: Optional[list] = None, bins: Optional[int] = None):
+    def hash(self, columns: Optional[List[str]] = None,
+             bins: Optional[int] = None):
         return hash(bins=bins)
 
     @transformation
-    def one_hot(self, columns: Optional[list] = None,
+    def one_hot(self, columns: Optional[List[str]] = None,
                 drop_first: bool = False):
         return one_hot(encoders=self._one_hot_encoders, drop_first=drop_first)
 
     @transformation
-    def counts(self, columns: Optional[list] = None):
+    def counts(self, columns: Optional[List[str]] = None):
         return counts()
 
     @transformation
-    def frequencies(self, columns: Optional[list] = None):
+    def frequencies(self, columns: Optional[List[str]] = None):
         return frequencies()

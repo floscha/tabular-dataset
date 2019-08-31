@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Optional
 
+import numpy as np
 import pandas as pd
 
 from tabular_dataset.columns import (AllColumns,  BinaryColumns,
@@ -8,9 +9,12 @@ from tabular_dataset.columns import (AllColumns,  BinaryColumns,
 
 
 class TabularDataset:
-    def __init__(self, data, test_data=None, numerical_columns=None,
-                 binary_columns=None, categorical_columns=None,
-                 target_column: str = None, target_columns: List[str] = None):
+    def __init__(self, data, test_data: Optional[pd.DataFrame] = pd.DataFrame,
+                 numerical_columns: Optional[pd.DataFrame] = None,
+                 binary_columns: Optional[pd.DataFrame] = None,
+                 categorical_columns: Optional[pd.DataFrame] = None,
+                 target_column: Optional[str] = None,
+                 target_columns: Optional[List[str]] = None):
         self.df = data  # TODO Copy data to avoid changing the original object?
         self.test_df = test_data
 
@@ -29,7 +33,7 @@ class TabularDataset:
         elif target_columns:
             self.target = TargetColumns(self, target_columns)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = [f'TabularDataset ({self.df.shape[0]} rows)']
         if self.numerical:
             s.append(f'\tNumerical Columns: {self.numerical.column_names}')
@@ -46,45 +50,45 @@ class TabularDataset:
         return '\n'.join(s)
 
     @property
-    def x(self):
+    def x(self) -> np.array:
         return pd.concat([self.numerical.transform(),
                           self.binary.transform(),
                           self.categorical.transform()],
                          axis=1).values
 
     @property
-    def y(self):
+    def y(self) -> np.array:
         return self.target.transform().values
 
     @property
-    def x_train(self):
+    def x_train(self) -> np.array:
         return self.x
 
     @property
-    def y_train(self):
+    def y_train(self) -> np.array:
         return self.y
 
     @property
-    def x_test(self):
+    def x_test(self) -> np.array:
         return pd.concat([self.numerical.transform(test=True),
                           self.binary.transform(test=True),
                           self.categorical.transform(test=True)],
                          axis=1).values
 
     @property
-    def y_test(self):
+    def y_test(self) -> np.array:
         return self.target.transform(test=True).values
 
     # --- Abbreviations for columns
 
     @property
-    def num(self):
+    def num(self) -> NumericalColumns:
         return self.numerical
 
     @property
-    def bin(self):
+    def bin(self) -> BinaryColumns:
         return self.binary
 
     @property
-    def cat(self):
+    def cat(self) -> CategoricalColumns:
         return self.categorical
