@@ -20,8 +20,10 @@ class CategoricalColumns(AbstractColumns):
         self._one_hot_encoders = {}  # type: dict
 
     @transformation
-    def impute(self, columns: Optional[List[str]] = None, method: str = 'unk'):
-        return impute(method=method, impute_values=self._impute_values)
+    def impute(self, columns: Optional[List[str]] = None, method: str = 'unk',
+               add_columns: bool = False):
+        return impute(method=method, impute_values=self._impute_values,
+                      add_columns=add_columns)
 
     @transformation
     def encode(self, columns: Optional[List[str]] = None):

@@ -82,5 +82,14 @@ def test_impute():
     assert repr(tds.x) == repr(np.array([0, 1, 0, 0.]).reshape(-1, 1))
 
 
+def test_impute_column():
+    df = get_test_df()
+
+    tds = TabularDataset(df, binary_columns=['B'])
+    tds.binary.impute(add_columns=True)
+
+    assert list(tds.x[:, 1]) == [False, False, False, True]
+
+
 if __name__ == '__main__':
     unittest.main()

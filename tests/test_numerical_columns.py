@@ -79,6 +79,15 @@ def test_impute_with_zero():
     assert repr(tds.x) == repr(np.array([[1], [2], [3], [0.]]))
 
 
+def test_impute_column():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'])
+    tds.numerical.impute(add_columns=True)
+
+    assert list(tds.x[:, 1]) == [False, False, False, True]
+
+
 def test_fluent_api():
     df = get_test_df()
 

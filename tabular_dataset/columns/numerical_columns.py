@@ -18,8 +18,9 @@ class NumericalColumns(AbstractColumns):
 
     @transformation
     def impute(self, columns: Optional[List[str]] = None,
-               method: str = 'median'):
-        return impute(method=method, impute_values=self._impute_values)
+               method: str = 'median', add_columns: bool = False):
+        return impute(method=method, impute_values=self._impute_values,
+                      add_columns=add_columns)
 
     @transformation
     def normalize(self, columns: Optional[List[str]] = None,

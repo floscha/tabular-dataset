@@ -3,6 +3,7 @@ from typing import Dict, List, Optional
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
+from tabular_dataset.transformations.common import add_imputed_columns
 from tabular_dataset.transformations.decorator import transformation
 
 
@@ -12,7 +13,8 @@ UNK_TOKEN = '<UNK>'
 
 @transformation
 def impute(df: pd.DataFrame, columns: List[str], impute_values: list,
-           method: Optional[str] = None, fit: bool = True) -> pd.DataFrame:
+           method: Optional[str] = None, fit: bool = True,
+           add_columns: bool = False) -> pd.DataFrame:
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")
@@ -29,7 +31,12 @@ def impute(df: pd.DataFrame, columns: List[str], impute_values: list,
         if not impute_values:
             raise ValueError("'impute value' has to be specified when fitting")
 
-    return df[columns].fillna(impute_values[0])
+    if add_columns:
+        add_imputed_columns(df, columns)
+
+    df[columns] = df[columns].fillna(impute_values[0])
+
+    return df
 
 
 @transformation

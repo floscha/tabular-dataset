@@ -19,8 +19,9 @@ class BinaryColumns(AbstractColumns):
         return encode()
 
     @transformation
-    def impute(self, columns: Optional[List[str]] = None):
-        return impute()
+    def impute(self, columns: Optional[List[str]] = None,
+               add_columns: bool = False):
+        return impute(add_columns=add_columns)
 
     @transformation
     def counts(self, columns: Optional[List[str]] = None):
