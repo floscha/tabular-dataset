@@ -2,8 +2,8 @@ from typing import Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
-from tabular_dataset.transformations.categorical import (encode, hash, impute,
-                                                         one_hot)
+from tabular_dataset.transformations.categorical import (counts, encode, hash,
+                                                         impute, one_hot)
 
 
 class CategoricalColumns(AbstractColumns):
@@ -30,3 +30,7 @@ class CategoricalColumns(AbstractColumns):
     def one_hot(self, columns: Optional[list] = None,
                 drop_first: bool = False):
         return one_hot(encoders=self._one_hot_encoders, drop_first=drop_first)
+
+    @transformation
+    def counts(self, columns: Optional[list] = None):
+        return counts()
