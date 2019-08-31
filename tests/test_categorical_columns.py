@@ -114,6 +114,28 @@ def test_encode_one_hot_with_hashing():
                                          [1., 0., 1., 0.]]))
 
 
+def test_counts_without_nan_values():
+    df = get_test_df()
+
+    tds = TabularDataset(df.dropna(), categorical_columns=['A', 'B'])
+    tds.categorical.counts()
+
+    assert list(tds.x[:, 2]) == [2, 2, 2, 2]
+    assert list(tds.x[:, 3]) == [2, 2, 2, 2]
+
+
+def test_counts_with_nan_values():
+    df = get_test_df()
+
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+    tds.categorical.impute()
+    tds.categorical.counts()
+
+    assert list(tds.x[:, 2]) == [2, 2, 2, 2, 2, 2]
+    assert list(tds.x[:, 3]) == [2, 2, 2, 2, 2, 2]
+
+
 def test_impute_with_unk_token():
     df = get_test_df()
 

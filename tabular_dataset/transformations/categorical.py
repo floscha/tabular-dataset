@@ -6,6 +6,7 @@ from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 from tabular_dataset.transformations.decorator import transformation
 
 
+NAN_TOKEN = '<NaN>'
 UNK_TOKEN = '<UNK>'
 
 
@@ -15,9 +16,6 @@ def impute(df, columns: list, method: Optional[str] = None, fit: bool = True,
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")
-        if impute_values:
-            raise ValueError("'impute value' argument cannot be used when " +
-                             "fitting")
         if method == 'unk':
             impute_values.append(UNK_TOKEN)
         elif method == 'mode':
@@ -78,3 +76,11 @@ def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
         columnar_offset = 1 if drop_first else 0
         encoded_columns.append(new_columns.iloc[:, columnar_offset:])
     return pd.concat(encoded_columns, axis=1)
+
+
+@transformation
+def counts(df, columns: list):
+    for column_name in columns:
+        counts = df[column_name].value_counts()
+        df[column_name + '_count'] = df[column_name].map(counts)
+    return df
