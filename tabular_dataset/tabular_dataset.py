@@ -82,7 +82,7 @@ class TabularDataset:
     def y_test(self) -> np.array:
         return self.target.transform(test=True).values
 
-    def split(self, n_splits: int = 2, random_state: Optional[int],
+    def split(self, n_splits: int = 2, random_state: Optional[int] = None,
               shuffle: bool = False):
         """Create a number of splits for K-fold cross validation.
 
