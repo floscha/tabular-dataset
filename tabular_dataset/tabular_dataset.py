@@ -2,6 +2,7 @@ from typing import List, Optional
 
 import numpy as np
 import pandas as pd
+from sklearn.model_selection import KFold
 
 from tabular_dataset.columns import (AllColumns,  BinaryColumns,
                                      CategoricalColumns,  NumericalColumns,
@@ -49,6 +50,8 @@ class TabularDataset:
 
         return '\n'.join(s)
 
+    # --- Various getters for data to be used by machine learning algorithms
+
     @property
     def x(self) -> np.array:
         return pd.concat([self.numerical.transform(),
@@ -78,6 +81,27 @@ class TabularDataset:
     @property
     def y_test(self) -> np.array:
         return self.target.transform(test=True).values
+
+    def split(self, n_splits: int = 2, random_state: Optional[int],
+              shuffle: bool = False):
+        """Create a number of splits for K-fold cross validation.
+
+        Uses an iterator to not create all folds at once. Otherwise, e.g. 1GB
+        of data would turn into 10GB with n_splits = 10.
+
+        Args:
+            n_splits: The number of splits to divide the dataset into.
+            random_state: A seed to reproduce splits.
+            shuffle: Shuffle the data when True or not when False.
+        """
+        # Store x and y to not compute them again with each fold.
+        x, y = self.x, self.y
+        kf = KFold(n_splits=n_splits, random_state=random_state,
+                   shuffle=shuffle)
+        for train_index, test_index in kf.split(x):
+            x_train, x_test = x[train_index], x[test_index]
+            y_train, y_test = y[train_index], y[test_index]
+            yield x_train, x_test, y_train, y_test
 
     # --- Abbreviations for columns
 

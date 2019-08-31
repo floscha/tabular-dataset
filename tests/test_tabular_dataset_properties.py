@@ -1,4 +1,5 @@
 import unittest
+from typing import Iterator
 
 import numpy as np
 import pandas as pd
@@ -124,6 +125,26 @@ def test_cat_abbreviation():
                          categorical_columns=['C'], target_column='target')
 
     assert isinstance(tds.cat, CategoricalColumns)
+
+
+def test_k_fold_cross_validation():
+    df = get_test_df()
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    cv_iterator = tds.split(n_splits=4)
+
+    assert isinstance(cv_iterator, Iterator)
+
+    cv_list = list(cv_iterator)
+    assert len(cv_list) == 4
+
+    for fold in cv_list:
+        x_train, x_test, y_train, y_test = fold
+        assert len(x_train) == 3
+        assert len(x_test) == 1
+        assert len(y_train) == 3
+        assert len(y_test) == 1
 
 
 if __name__ == '__main__':
