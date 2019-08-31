@@ -205,5 +205,15 @@ def test_impute_with_mode_no_fit():
                                              dtype='object'))
 
 
+def test_impute_column():
+    df = get_test_df()
+
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.impute(add_column=True)
+
+    assert list(tds.x[:, 2]) == [False, False, False, False, True, True]
+    assert list(tds.x[:, 3]) == [False, False, False, False, True, True]
+
+
 if __name__ == '__main__':
     unittest.main()

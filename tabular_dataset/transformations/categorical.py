@@ -12,7 +12,8 @@ UNK_TOKEN = '<UNK>'
 
 @transformation
 def impute(df: pd.DataFrame, columns: List[str], impute_values: list,
-           method: Optional[str] = None, fit: bool = True) -> pd.DataFrame:
+           method: Optional[str] = None, fit: bool = True,
+           add_column: bool = False) -> pd.DataFrame:
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")
@@ -29,7 +30,14 @@ def impute(df: pd.DataFrame, columns: List[str], impute_values: list,
         if not impute_values:
             raise ValueError("'impute value' has to be specified when fitting")
 
-    return df[columns].fillna(impute_values[0])
+    if add_column:
+        for column_name in columns:
+            print(df[column_name].isna())
+            df[column_name + '_was_imputed'] = df[column_name].isna()
+
+    df[columns] = df[columns].fillna(impute_values[0])
+
+    return df
 
 
 @transformation
