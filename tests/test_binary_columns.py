@@ -38,7 +38,7 @@ def test_counts_without_nan_values():
     tds = TabularDataset(df.dropna(), binary_columns=['B'])
     tds.binary.counts()
 
-    assert repr(tds.x[:, 1]) == repr(np.array([2., 1., 2.]))
+    assert list(tds.x[:, 1]) == [2., 1., 2.]
 
 
 def test_counts_with_nan_values():
@@ -49,7 +49,28 @@ def test_counts_with_nan_values():
     tds.binary.impute()
     tds.binary.counts()
 
-    assert repr(tds.x[:, 1]) == repr(np.array([2., 1., 2., 1.]))
+    assert list(tds.x[:, 1]) == [2., 1., 2., 1.]
+
+
+def test_frequencies_without_nan_values():
+    df = get_test_df()
+
+    tds = TabularDataset(df.dropna(), binary_columns=['B'])
+    tds.binary.frequencies()
+
+    one_third = 0.3333333333333333
+    assert list(tds.x[:, 1]) == [one_third * 2, one_third, one_third * 2]
+
+
+def test_frequencies_with_nan_values():
+    df = get_test_df()
+
+    tds = TabularDataset(df, binary_columns=['B'])
+    tds.binary.encode()
+    tds.binary.impute()
+    tds.binary.frequencies()
+
+    assert list(tds.x[:, 1]) == [0.5, 0.25, 0.5, 0.25]
 
 
 def test_impute():

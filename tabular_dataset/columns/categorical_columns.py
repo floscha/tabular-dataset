@@ -2,7 +2,8 @@ from typing import Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
-from tabular_dataset.transformations.categorical import (counts, encode, hash,
+from tabular_dataset.transformations.categorical import (counts, encode,
+                                                         frequencies, hash,
                                                          impute, one_hot)
 
 
@@ -34,3 +35,7 @@ class CategoricalColumns(AbstractColumns):
     @transformation
     def counts(self, columns: Optional[list] = None):
         return counts()
+
+    @transformation
+    def frequencies(self, columns: Optional[list] = None):
+        return frequencies()

@@ -3,7 +3,7 @@ from typing import Optional
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
 from tabular_dataset.transformations.binary import encode, impute
-from tabular_dataset.transformations.categorical import counts
+from tabular_dataset.transformations.categorical import counts, frequencies
 
 
 class BinaryColumns(AbstractColumns):
@@ -21,3 +21,7 @@ class BinaryColumns(AbstractColumns):
     @transformation
     def counts(self, columns: Optional[list] = None):
         return counts()
+
+    @transformation
+    def frequencies(self, columns: Optional[list] = None):
+        return frequencies()

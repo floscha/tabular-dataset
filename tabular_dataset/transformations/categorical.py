@@ -84,3 +84,12 @@ def counts(df, columns: list):
         counts = df[column_name].value_counts()
         df[column_name + '_count'] = df[column_name].map(counts)
     return df
+
+
+@transformation
+def frequencies(df, columns: list):
+    for column_name in columns:
+        counts = df[column_name].value_counts()
+        freqs = counts / len(df)
+        df[column_name + '_freq'] = df[column_name].map(freqs)
+    return df
