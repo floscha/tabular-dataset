@@ -82,6 +82,5 @@ def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
 def counts(df, columns: list):
     for column_name in columns:
         counts = df[column_name].value_counts()
-        import numpy as np
         df[column_name + '_count'] = df[column_name].map(counts)
     return df
