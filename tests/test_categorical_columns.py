@@ -31,6 +31,17 @@ def test_encode():
                                          [2, 2], [2, 2]]))
 
 
+def test_encode_with_selected_columns():
+    df = get_test_df()
+
+    tds = TabularDataset(df, categorical_columns=['A', 'B'])
+    tds.categorical.encode(columns=['B'])
+
+    assert repr(tds.x) == repr(np.array([['a', 0], ['b', 0], ['b', 1],
+                                         ['a', 1], [np.nan, 2], [np.nan, 2]],
+                                        dtype=np.object))
+
+
 def test_encode_no_fit():
     df = get_test_df()
     test_data = df.iloc[-2:]
