@@ -70,7 +70,7 @@ def test_frequencies_with_nan_values():
     tds.binary.impute()
     tds.binary.frequencies()
 
-    assert list(tds.x[:, 1]) == [0.5 , 0.25, 0.5 , 0.25]
+    assert list(tds.x[:, 1]) == [0.5, 0.25, 0.5, 0.25]
 
 
 def test_impute():
