@@ -1,13 +1,17 @@
+from typing import List
+
+import pandas as pd
+
 from tabular_dataset.transformations.decorator import transformation
 
 
 @transformation
-def impute(df, columns: list):
+def impute(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
     return df[columns].fillna(0)
 
 
 @transformation
-def encode(df, columns: list):
+def encode(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
     for column_name in columns:
         column_values = df[column_name].dropna().unique()
         if len(column_values) != 2:

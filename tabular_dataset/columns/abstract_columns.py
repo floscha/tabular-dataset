@@ -1,12 +1,17 @@
 import inspect
+from typing import List
 
 
 class AbstractColumns:
-    def __init__(self, ds, column_names):
+    try:
+        from tabular_dataset import TabularDataset
+    except: pass  # noqa: E722
+
+    def __init__(self, ds: 'TabularDataset', column_names: List[str]):
         self.ds = ds
         self.column_names = column_names
 
-        self.lineage = []
+        self.lineage = []  # type: list
 
     def __bool__(self):
         return len(self) > 0
@@ -15,7 +20,13 @@ class AbstractColumns:
         return len(self.column_names)
 
     def transform(self, test: bool = False):
-        df = self.ds.test_df if test else self.ds.df
+        if test:
+            if self.ds.test_df is None:
+                raise ValueError("'test_data' arguments needs to be set for " +
+                                 "TabularDataset")
+            df = self.ds.test_df
+        else:
+            df = self.ds.df
         df = df[self.column_names].copy()
 
         for transformation_fn in self.lineage:

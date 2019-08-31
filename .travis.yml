@@ -12,6 +12,7 @@ install:
   - pip install -r test-requirements.txt
 script:
   - pylama tabular_dataset tests
+  - mypy --config-file=.mypy.ini tabular_dataset
   - pytest --cov tabular_dataset
 after_success:
   - coveralls

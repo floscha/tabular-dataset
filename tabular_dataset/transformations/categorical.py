@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Dict, List, Optional
 
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
@@ -11,8 +11,8 @@ UNK_TOKEN = '<UNK>'
 
 
 @transformation
-def impute(df, columns: list, method: Optional[str] = None, fit: bool = True,
-           impute_values: Optional[list] = None):
+def impute(df: pd.DataFrame, columns: List[str], impute_values: list,
+           method: Optional[str] = None, fit: bool = True) -> pd.DataFrame:
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")
@@ -33,8 +33,9 @@ def impute(df, columns: list, method: Optional[str] = None, fit: bool = True,
 
 
 @transformation
-def encode(df: pd.DataFrame, columns: list, encoders: dict, fit: bool = True) \
-        -> pd.DataFrame:
+def encode(df: pd.DataFrame, columns: List[str],
+           encoders: Dict[str, LabelEncoder], fit: bool = True) \
+           -> pd.DataFrame:
     for column_name in columns:
         if fit:
             encoder = LabelEncoder()
@@ -50,15 +51,16 @@ def encode(df: pd.DataFrame, columns: list, encoders: dict, fit: bool = True) \
 
 
 @transformation
-def hash(df: pd.DataFrame, columns: list, bins: int) -> pd.DataFrame:
+def hash(df: pd.DataFrame, columns: List[str], bins: int) -> pd.DataFrame:
     for column_name in columns:
         df[column_name] = df[column_name] % bins
     return df
 
 
 @transformation
-def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
-            fit: bool = True, drop_first: bool = False) -> pd.DataFrame:
+def one_hot(df: pd.DataFrame, columns: List[str],
+            encoders: Dict[str, OneHotEncoder], fit: bool = True,
+            drop_first: bool = False) -> pd.DataFrame:
     encoded_columns = list()
     for column_name in columns:
         values = df[column_name].values.reshape(-1, 1)
@@ -79,7 +81,7 @@ def one_hot(df: pd.DataFrame, columns: list, encoders: dict,
 
 
 @transformation
-def counts(df, columns: list):
+def counts(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
     for column_name in columns:
         counts = df[column_name].value_counts()
         df[column_name + '_count'] = df[column_name].map(counts)
@@ -87,7 +89,7 @@ def counts(df, columns: list):
 
 
 @transformation
-def frequencies(df, columns: list):
+def frequencies(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
     for column_name in columns:
         counts = df[column_name].value_counts()
         freqs = counts / len(df)
