@@ -21,9 +21,9 @@ class CategoricalColumns(AbstractColumns):
 
     @transformation
     def impute(self, columns: Optional[List[str]] = None, method: str = 'unk',
-               add_column: bool = False):
+               add_columns: bool = False):
         return impute(method=method, impute_values=self._impute_values,
-                      add_column=add_column)
+                      add_columns=add_columns)
 
     @transformation
     def encode(self, columns: Optional[List[str]] = None):

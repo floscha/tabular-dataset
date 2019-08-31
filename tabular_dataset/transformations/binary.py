@@ -2,12 +2,18 @@ from typing import List
 
 import pandas as pd
 
+from tabular_dataset.transformations.common import add_imputed_columns
 from tabular_dataset.transformations.decorator import transformation
 
 
 @transformation
-def impute(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
-    return df[columns].fillna(0)
+def impute(df: pd.DataFrame, columns: List[str], add_columns: bool = False) \
+        -> pd.DataFrame:
+    if add_columns:
+        add_imputed_columns(df, columns)
+
+    df[columns] = df[columns].fillna(0)
+    return df
 
 
 @transformation

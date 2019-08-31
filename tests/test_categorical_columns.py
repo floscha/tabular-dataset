@@ -209,7 +209,7 @@ def test_impute_column():
     df = get_test_df()
 
     tds = TabularDataset(df, categorical_columns=['A', 'B'])
-    tds.categorical.impute(add_column=True)
+    tds.categorical.impute(add_columns=True)
 
     assert list(tds.x[:, 2]) == [False, False, False, False, True, True]
     assert list(tds.x[:, 3]) == [False, False, False, False, True, True]
