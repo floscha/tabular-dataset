@@ -6,8 +6,8 @@ from tabular_dataset.transformations.decorator import transformation
 
 
 @transformation
-def impute(df, columns: list, method: Optional[str] = None, fit: bool = True,
-           impute_values: Optional[List[float]] = None):
+def impute(df, columns: list, impute_values: List[float],
+           method: Optional[str] = None, fit: bool = True):
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")

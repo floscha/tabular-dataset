@@ -11,8 +11,8 @@ UNK_TOKEN = '<UNK>'
 
 
 @transformation
-def impute(df, columns: list, method: Optional[str] = None, fit: bool = True,
-           impute_values: Optional[list] = None):
+def impute(df, columns: list, impute_values: list,
+           method: Optional[str] = None, fit: bool = True):
     if fit:
         if not method:
             raise ValueError("'method' has to be specified when fitting")
