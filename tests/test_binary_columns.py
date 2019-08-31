@@ -41,7 +41,7 @@ def test_counts_without_nan_values():
     assert repr(tds.x[:, 1]) == repr(np.array([2., 1., 2.]))
 
 
-def test_counts_without_nan_values():
+def test_counts_with_nan_values():
     df = get_test_df()
 
     tds = TabularDataset(df, binary_columns=['B'])
