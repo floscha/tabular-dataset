@@ -70,7 +70,8 @@ def log(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
     By defintion of the log operation, no negative values are supported.
     A 1 is added to all values to make the transform work for 0 values as well.
     """
-    return df.apply(lambda x: np.log(1 + x))
+    df[columns] = df[columns].apply(lambda x: np.log(1 + x))
+    return df
 
 
 @transformation
