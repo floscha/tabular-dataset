@@ -71,3 +71,10 @@ def log(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
     A 1 is added to all values to make the transform work for 0 values as well.
     """
     return df.apply(lambda x: np.log(1 + x))
+
+
+@transformation
+def power(df: pd.DataFrame, columns: List[str], exponent: int) -> pd.DataFrame:
+    """Apply power-transformation to numerical columns."""
+    df[columns] = df[columns].apply(lambda x: np.power(x, exponent))
+    return df
