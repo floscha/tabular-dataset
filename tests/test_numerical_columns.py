@@ -69,6 +69,17 @@ def test_power():
     assert np.allclose(actual_result, expected_result, equal_nan=True)
 
 
+def test_ranks_with_default_method():
+    df = pd.DataFrame({'A': [0, 2, 3, 2]})
+    tds = TabularDataset(df, numerical_columns=['A'])
+    expected_result = np.array([1., 2.5, 4., 2.5])
+
+    tds.numerical.ranks()
+    actual_result = tds.x[:, 1]
+
+    assert np.allclose(actual_result, expected_result)
+
+
 def test_impute_with_median():
     df = get_test_df()
 

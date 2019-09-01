@@ -2,6 +2,7 @@ from typing import List, Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
+from tabular_dataset.transformations.common import add_ranks
 from tabular_dataset.transformations.numerical import (impute, log, normalize,
                                                        power)
 
@@ -35,3 +36,8 @@ class NumericalColumns(AbstractColumns):
     @transformation
     def power(self, exponent: int, columns: Optional[List[str]] = None):
         return power(exponent=exponent)
+
+    @transformation
+    def ranks(self, columns: Optional[List[str]] = None,
+              method: Optional[str] = 'average'):
+        return add_ranks(method=method)
