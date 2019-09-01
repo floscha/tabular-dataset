@@ -2,6 +2,7 @@ from typing import List, Optional
 
 import numpy as np
 import pandas as pd
+from scipy.stats import rankdata
 from sklearn.preprocessing import MinMaxScaler
 
 from tabular_dataset.transformations.common import add_imputed_columns
@@ -78,4 +79,37 @@ def log(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
 def power(df: pd.DataFrame, columns: List[str], exponent: int) -> pd.DataFrame:
     """Apply power-transformation to numerical columns."""
     df[columns] = df[columns].apply(lambda x: np.power(x, exponent))
+    return df
+
+
+@transformation
+def add_ranks(df: pd.DataFrame, columns: List[str],
+              method: Optional[str] = 'average') -> pd.DataFrame:
+    """Assign ranks to data, dealing with ties appropriately.
+
+    Args:
+        method: The method used to assign ranks to tied elements. The options
+            are ‘average’, ‘min’, ‘max’, ‘dense’ and ‘ordinal’:
+
+            ‘average’: The average of the ranks that would have been assigned
+            to all the tied values is assigned to each value.
+
+            ‘min’: The minimum of the ranks that would have been assigned to
+            all the tied values is assigned to each value. (This is also
+            referred to as “competition” ranking.)
+
+            ‘max’: The maximum of the ranks that would have been assigned to
+            all the tied values is assigned to each value.
+
+            ‘dense’: Like ‘min’, but the rank of the next highest element is
+            assigned the rank immediately after those assigned to the tied
+            elements.
+
+            ‘ordinal’: All values are given a distinct rank, corresponding to
+            the order that the values occur in a.
+
+            The default is ‘average’.
+    """
+    for column_name in columns:
+        df[column_name + '_rank'] = rankdata(df[column_name], method=method)
     return df
