@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import List, Optional
 
 import numpy as np
 import pandas as pd
@@ -45,32 +45,22 @@ def impute(df: pd.DataFrame, columns: List[str], impute_values: List[float],
 
 
 @transformation
-def scale(df: pd.DataFrame, columns: List[str],
-          scalers: List[MinMaxScaler], fit: bool) -> pd.DataFrame:
+def normalize(df: pd.DataFrame, columns: List[str],
+              scalers: List[MinMaxScaler], method: str, fit: bool) \
+              -> pd.DataFrame:
     scaler = scalers[0]
     if fit:
-        scaler = MinMaxScaler()
-        df[columns] = scaler.fit_transform(df[columns])
-        scalers[0] = scaler
+        if method == 'minmax':
+            scaler = MinMaxScaler()
+            df[columns] = scaler.fit_transform(df[columns])
+            scalers[0] = scaler
+        else:
+            raise ValueError("Method not supported")
     else:
         if scaler is None:
             raise ValueError("Scaler has to be fit first")
         df[columns] = scaler.transform(df[columns])
-    return df
 
-
-@transformation
-def normalize(df: pd.DataFrame, columns: List[str],
-              stats: Dict[str, Tuple[float, float]], fit: bool) \
-              -> pd.DataFrame:
-    for column_name in columns:
-        if fit:
-            column_stats = df[column_name].mean(), df[column_name].std()
-            stats[column_name] = column_stats
-        else:
-            column_stats = stats[column_name]
-        mean, std = column_stats
-        df[column_name] = (df[column_name] - mean) / std
     return df
 
 

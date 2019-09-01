@@ -3,7 +3,7 @@ from typing import List, Optional
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
 from tabular_dataset.transformations.numerical import (add_ranks, impute, log,
-                                                       normalize, power, scale)
+                                                       normalize, power)
 
 
 class NumericalColumns(AbstractColumns):
@@ -16,7 +16,6 @@ class NumericalColumns(AbstractColumns):
 
         self._impute_values = []  # type: list
         self._scalers = [None]  # type: list
-        self._stats = {}  # type: dict
 
     @transformation
     def impute(self, columns: Optional[List[str]] = None,
@@ -25,12 +24,9 @@ class NumericalColumns(AbstractColumns):
                       add_columns=add_columns)
 
     @transformation
-    def scale(self, columns: Optional[List[str]] = None):
-        return scale(scalers=self._scalers)
-
-    @transformation
-    def normalize(self, columns: Optional[List[str]] = None):
-        return normalize(stats=self._stats)
+    def normalize(self, columns: Optional[List[str]] = None,
+                  method: str = 'minmax'):
+        return normalize(scalers=self._scalers, method=method)
 
     @transformation
     def log(self, columns: Optional[List[str]] = None):
