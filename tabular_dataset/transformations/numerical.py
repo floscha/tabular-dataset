@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 
@@ -60,3 +61,13 @@ def normalize(df: pd.DataFrame, columns: List[str],
         df[columns] = scaler.transform(df[columns])
 
     return df
+
+
+@transformation
+def log(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
+    """Apply log-transformation to numerical columns.
+
+    By defintion of the log operation, no negative values are supported.
+    A 1 is added to all values to make the transform work for 0 values as well.
+    """
+    return df.apply(lambda x: np.log(1 + x))

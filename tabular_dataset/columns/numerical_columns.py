@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
-from tabular_dataset.transformations.numerical import impute, normalize
+from tabular_dataset.transformations.numerical import impute, log, normalize
 
 
 class NumericalColumns(AbstractColumns):
@@ -26,3 +26,7 @@ class NumericalColumns(AbstractColumns):
     def normalize(self, columns: Optional[List[str]] = None,
                   method: str = 'minmax'):
         return normalize(scalers=self._scalers, method=method)
+
+    @transformation
+    def log(self, columns: Optional[List[str]] = None):
+        return log()
