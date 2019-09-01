@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -61,18 +61,19 @@ def scale(df: pd.DataFrame, columns: List[str],
 
 @transformation
 def normalize(df: pd.DataFrame, columns: List[str],
-              normalizers: List[Normalizer], fit: bool) -> pd.DataFrame:
-    normalizer = normalizers[0]
-    if fit:
-        normalizer = Normalizer()
-        # Hacky workaround with calling .T twice is neccessary since Normalizer
-        # uses axis=1 while we need axis=0.
-        df[columns] = normalizer.fit_transform(df[columns].T).T
-        normalizers[0] = normalizer
-    else:
-        if normalizer is None:
-            raise ValueError("Normalizer has to be fit first")
-        df[columns] = normalizer.transform(df[columns].T).T
+              stats: Dict[str, Tuple[float, float]], fit: bool) \
+              -> pd.DataFrame:
+    for column_name in columns:
+        if fit:
+            column_stats = df[column_name].mean(), df[column_name].std()
+            stats[column_name] = column_stats
+        else:
+            column_stats = stats.get(column_name)
+            if column_stats is None:
+                raise ValueError(f"Column {column_name!r} was not observed " +
+                                 "during training")
+        mean, std = column_stats
+        df[column_name] = (df[column_name] - mean) / std
     return df
 
 

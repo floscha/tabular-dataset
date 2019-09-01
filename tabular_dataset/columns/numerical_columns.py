@@ -16,7 +16,7 @@ class NumericalColumns(AbstractColumns):
 
         self._impute_values = []  # type: list
         self._scalers = [None]  # type: list
-        self._normalizers = [None]  # type: list
+        self._stats = {}  # type: dict
 
     @transformation
     def impute(self, columns: Optional[List[str]] = None,
@@ -30,7 +30,7 @@ class NumericalColumns(AbstractColumns):
 
     @transformation
     def normalize(self, columns: Optional[List[str]] = None):
-        return normalize(normalizers=self._normalizers)
+        return normalize(stats=self._stats)
 
     @transformation
     def log(self, columns: Optional[List[str]] = None):

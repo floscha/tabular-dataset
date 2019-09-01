@@ -46,11 +46,23 @@ def test_scale_no_fit():
 def test_normalize():
     df = get_test_df()
     tds = TabularDataset(df.dropna(), numerical_columns=['A'])
-    expected_result = np.array([0.26726124, 0.53452248, 0.80178373])
+    expected_result = np.array([-1., 0., 1.])
 
     tds.numerical.normalize()
     actual_result = tds.x[:, 0]
-    print(actual_result)
+
+    assert np.allclose(actual_result, expected_result)
+
+
+def test_normalize_no_fit():
+    df = get_test_df()
+    tds = TabularDataset(df.iloc[[0, 1]], test_data=df.iloc[[2]],
+                         numerical_columns=['A'])
+    expected_result = np.array([2.12132034])
+
+    tds.numerical.normalize()
+    _ = tds.x_train
+    actual_result = tds.x_test[:, 0]
 
     assert np.allclose(actual_result, expected_result)
 
