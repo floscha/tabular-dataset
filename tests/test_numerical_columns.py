@@ -162,6 +162,17 @@ def test_impute_column():
     assert list(tds.x[:, 1]) == [False, False, False, True]
 
 
+def test_remove_outliers():
+    df = pd.DataFrame({'A': [-100] + [0] * 100 + [100]})
+    tds = TabularDataset(df, numerical_columns=['A'])
+    expected_result = [0] * 102
+
+    tds.numerical.remove_outliers()
+    actual_result = list(tds.x[:, 0])
+
+    assert actual_result == expected_result
+
+
 def test_fluent_api():
     df = get_test_df()
 
