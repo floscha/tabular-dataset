@@ -43,6 +43,21 @@ def test_normalize_no_fit():
     assert repr(tds.x_test) == repr(np.array([[1.], [np.nan]]))
 
 
+def test_log():
+    df = pd.DataFrame({'A': [-2, -1, 0, 1, 2, np.nan]})
+    tds = TabularDataset(df, numerical_columns=['A'])
+    expected_result = np.array([np.nan, -float('inf'), 0.000000, 0.693147,
+                                1.098612, np.nan])
+
+    # Ignore "divide by zero" warning for testing.
+    with np.testing.suppress_warnings() as sup:
+        sup.filter(RuntimeWarning)
+        tds.numerical.log()
+        actual_result = tds.x[:, 0]
+
+    assert np.allclose(actual_result, expected_result, equal_nan=True)
+
+
 def test_impute_with_median():
     df = get_test_df()
 
