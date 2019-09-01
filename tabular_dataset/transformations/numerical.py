@@ -68,8 +68,9 @@ def normalize(df: pd.DataFrame, columns: List[str],
             column_stats = df[column_name].mean(), df[column_name].std()
             stats[column_name] = column_stats
         else:
-            column_stats = stats.get(column_name)
-            if column_stats is None:
+            try:
+                column_stats = stats[column_name]
+            except KeyError:
                 raise ValueError(f"Column {column_name!r} was not observed " +
                                  "during training")
         mean, std = column_stats
