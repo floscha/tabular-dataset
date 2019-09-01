@@ -23,24 +23,36 @@ def test_column_names_are_correctly_set():
     assert tds.numerical.column_names == ['A']
 
 
-def test_normalize():
+def test_scale():
     df = get_test_df()
 
     tds = TabularDataset(df, numerical_columns=['A'])
-    tds.numerical.normalize()
+    tds.numerical.scale()
 
     assert repr(tds.x) == repr(np.array([[0.], [0.5], [1.], [np.nan]]))
 
 
-def test_normalize_no_fit():
+def test_scale_no_fit():
     df = get_test_df()
     test_data = df.iloc[-2:]
 
     tds = TabularDataset(df, test_data=test_data, numerical_columns=['A'])
-    tds.numerical.normalize()
+    tds.numerical.scale()
 
     _ = tds.x_train
     assert repr(tds.x_test) == repr(np.array([[1.], [np.nan]]))
+
+
+def test_normalize():
+    df = get_test_df()
+    tds = TabularDataset(df.dropna(), numerical_columns=['A'])
+    expected_result = np.array([0.26726124, 0.53452248, 0.80178373])
+
+    tds.numerical.normalize()
+    actual_result = tds.x[:, 0]
+    print(actual_result)
+
+    assert np.allclose(actual_result, expected_result)
 
 
 def test_log():
@@ -144,7 +156,7 @@ def test_fluent_api():
     tds = TabularDataset(df, numerical_columns=['A'])
     (tds
      .numerical.impute()
-     .numerical.normalize())
+     .numerical.scale())
 
     assert repr(tds.x) == repr(np.array([[0.], [0.5], [1.], [0.5]]))
 

@@ -3,7 +3,7 @@ from typing import List, Optional
 import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, Normalizer
 
 from tabular_dataset.transformations.common import add_imputed_columns
 from tabular_dataset.transformations.decorator import transformation
@@ -45,22 +45,34 @@ def impute(df: pd.DataFrame, columns: List[str], impute_values: List[float],
 
 
 @transformation
-def normalize(df: pd.DataFrame, columns: List[str],
-              scalers: List[MinMaxScaler], method: str, fit: bool) \
-              -> pd.DataFrame:
+def scale(df: pd.DataFrame, columns: List[str],
+          scalers: List[MinMaxScaler], fit: bool) -> pd.DataFrame:
     scaler = scalers[0]
     if fit:
-        if method == 'minmax':
-            scaler = MinMaxScaler()
-            df[columns] = scaler.fit_transform(df[columns])
-            scalers[0] = scaler
-        else:
-            raise ValueError("Method not supported")
+        scaler = MinMaxScaler()
+        df[columns] = scaler.fit_transform(df[columns])
+        scalers[0] = scaler
     else:
         if scaler is None:
             raise ValueError("Scaler has to be fit first")
         df[columns] = scaler.transform(df[columns])
+    return df
 
+
+@transformation
+def normalize(df: pd.DataFrame, columns: List[str],
+              normalizers: List[Normalizer], fit: bool) -> pd.DataFrame:
+    normalizer = normalizers[0]
+    if fit:
+        normalizer = Normalizer()
+        # Hacky workaround with calling .T twice is neccessary since Normalizer
+        # uses axis=1 while we need axis=0.
+        df[columns] = normalizer.fit_transform(df[columns].T).T
+        normalizers[0] = normalizer
+    else:
+        if normalizer is None:
+            raise ValueError("Normalizer has to be fit first")
+        df[columns] = normalizer.transform(df[columns].T).T
     return df
 
 
