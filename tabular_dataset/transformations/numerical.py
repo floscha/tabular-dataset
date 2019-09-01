@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 from scipy.stats import rankdata
-from sklearn.preprocessing import MinMaxScaler, Normalizer
+from sklearn.preprocessing import MinMaxScaler
 
 from tabular_dataset.transformations.common import add_imputed_columns
 from tabular_dataset.transformations.decorator import transformation
