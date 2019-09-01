@@ -123,3 +123,24 @@ def add_ranks(df: pd.DataFrame, columns: List[str],
     for column_name in columns:
         df[column_name + '_rank'] = rankdata(df[column_name], method=method)
     return df
+
+
+@transformation
+def remove_outliers(df: pd.DataFrame, columns: List[str],
+                    lower_percentile: int = 1, upper_percentile: int = 99) \
+                    -> pd.DataFrame:
+    """Removes outliers below and above given percentiles.
+
+    Technically, instead of removing the values, they are replaced by an upper
+    or lower bound.
+
+    TODO: Right now, bounds for train and test sets are calculated separately.
+          Instead, remember the bounds from training so that they can be
+          re-used during test time, similar to `stats` for `normalize`.
+    """
+    for column_name in columns:
+        lower_bound, upper_bound = np.percentile(df[column_name],
+                                                 [lower_percentile,
+                                                  upper_percentile])
+        df[column_name] = np.clip(df[column_name], lower_bound, upper_bound)
+    return df

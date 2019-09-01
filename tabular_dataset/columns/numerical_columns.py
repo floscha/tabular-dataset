@@ -3,7 +3,8 @@ from typing import List, Optional
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
 from tabular_dataset.transformations.numerical import (add_ranks, impute, log,
-                                                       normalize, power, scale)
+                                                       normalize, power,
+                                                       remove_outliers, scale)
 
 
 class NumericalColumns(AbstractColumns):
@@ -44,3 +45,7 @@ class NumericalColumns(AbstractColumns):
     def ranks(self, columns: Optional[List[str]] = None,
               method: Optional[str] = 'average'):
         return add_ranks(method=method)
+
+    @transformation
+    def remove_outliers(self, columns: Optional[List[str]] = None):
+        return remove_outliers()
