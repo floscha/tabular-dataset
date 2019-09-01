@@ -2,9 +2,8 @@ from typing import List, Optional
 
 from tabular_dataset.columns.abstract_columns import AbstractColumns
 from tabular_dataset.columns.decorator import transformation
-from tabular_dataset.transformations.common import add_ranks
-from tabular_dataset.transformations.numerical import (impute, log, normalize,
-                                                       power)
+from tabular_dataset.transformations.numerical import (add_ranks, impute, log,
+                                                       normalize, power)
 
 
 class NumericalColumns(AbstractColumns):
