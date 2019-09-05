@@ -9,7 +9,8 @@ class AllColumns(AbstractColumns):
     def __init__(self, ds):
         self.ds = ds
 
-    def transform(self, data: Optional[pd.DataFrame] = None, test: bool = False):
+    def transform(self, data: Optional[pd.DataFrame] = None,
+                  test: bool = False):
         raise TypeError(f"'AllColumns' does not support 'transform()'")
 
     @property

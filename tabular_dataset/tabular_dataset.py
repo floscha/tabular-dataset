@@ -90,13 +90,13 @@ class TabularDataset:
             test_size=test_size
         )
         x_train = pd.concat([self.numerical.transform(data=x_train),
-                          self.binary.transform(data=x_train),
-                          self.categorical.transform(data=x_train)],
-                         axis=1).values
+                             self.binary.transform(data=x_train),
+                             self.categorical.transform(data=x_train)],
+                            axis=1).values
         x_test = pd.concat([self.numerical.transform(data=x_test),
-                          self.binary.transform(data=x_test),
-                          self.categorical.transform(data=x_test)],
-                         axis=1).values
+                            self.binary.transform(data=x_test),
+                            self.categorical.transform(data=x_test)],
+                           axis=1).values
         y_train = self.target.transform(data=y_train).values
         y_test = self.target.transform(data=y_test).values
         return x_train, x_test, y_train, y_test
