@@ -1,6 +1,8 @@
 import inspect
 from typing import List, Optional
 
+import pandas as pd
+
 
 class AbstractColumns:
     try:
@@ -19,7 +21,7 @@ class AbstractColumns:
     def __len__(self):
         return len(self.column_names)
 
-    def transform(self, data: Optional = None, test: bool = False):
+    def transform(self, data: Optional[pd.DataFrame] = None, test: bool = False):
         if data is not None:
             df = data
         else:
