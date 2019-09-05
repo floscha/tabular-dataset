@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
 
 from tabular_dataset.columns import (AllColumns,  BinaryColumns,
                                      CategoricalColumns,  NumericalColumns,
@@ -81,6 +81,25 @@ class TabularDataset:
     @property
     def y_test(self) -> np.array:
         return self.target.transform(test=True).values
+
+    def train_test_split(self, test_size: float = 0.1):
+        """Split the tabular dataset into random train and test subsets."""
+        x_train, x_test, y_train, y_test = train_test_split(
+            self.df[self.all.column_names],
+            self.df[self.target.column_names],
+            test_size=test_size
+        )
+        x_train = pd.concat([self.numerical.transform(data=x_train),
+                          self.binary.transform(data=x_train),
+                          self.categorical.transform(data=x_train)],
+                         axis=1).values
+        x_test = pd.concat([self.numerical.transform(data=x_test),
+                          self.binary.transform(data=x_test),
+                          self.categorical.transform(data=x_test)],
+                         axis=1).values
+        y_train = self.target.transform(data=y_train).values
+        y_test = self.target.transform(data=y_test).values
+        return x_train, x_test, y_train, y_test
 
     def split(self, n_splits: int = 2, random_state: Optional[int] = None,
               shuffle: bool = False):

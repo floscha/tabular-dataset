@@ -127,6 +127,20 @@ def test_cat_abbreviation():
     assert isinstance(tds.cat, CategoricalColumns)
 
 
+def test_train_test_split():
+    df = get_test_df()
+
+    tds = TabularDataset(df, categorical_columns=['A'], target_column='target')
+    tds.categorical.impute()
+    tds.categorical.encode()
+    x_train, x_test, y_train, y_test = tds.train_test_split(test_size=0.25)
+
+    assert x_train.shape == (3, 1)
+    assert x_test.shape == (1, 1)
+    assert y_train.shape == (3, 1)
+    assert y_test.shape == (1, 1)
+
+
 def test_k_fold_cross_validation():
     df = get_test_df()
     tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
