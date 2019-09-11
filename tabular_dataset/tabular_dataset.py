@@ -73,14 +73,16 @@ class TabularDataset:
 
     @property
     def x_test(self) -> np.array:
-        return pd.concat([self.numerical.transform(test=True),
-                          self.binary.transform(test=True),
-                          self.categorical.transform(test=True)],
+        test_df = self.test_df
+        return pd.concat([self.numerical.transform(data=test_df, test=True),
+                          self.binary.transform(data=test_df, test=True),
+                          self.categorical.transform(data=test_df, test=True)],
                          axis=1).values
 
     @property
     def y_test(self) -> np.array:
-        return self.target.transform(test=True).values
+        test_df = self.test_df
+        return self.target.transform(data=test_df, test=True).values
 
     def split(self, n_splits: int = 2, random_state: Optional[int] = None,
               shuffle: bool = False):

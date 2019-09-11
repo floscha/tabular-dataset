@@ -2,6 +2,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from tabular_dataset import TabularDataset
 
@@ -42,16 +43,32 @@ def test_encode_with_selected_columns():
                                         dtype=np.object))
 
 
-def test_encode_no_fit():
+def test_encode_with_unseen_data_fails_without_unk_category():
     df = get_test_df()
-    test_data = df.iloc[-2:]
+    train_data = df.iloc[:2]
+    test_data = df.iloc[2:4]
 
-    tds = TabularDataset(df, test_data=test_data,
+    tds = TabularDataset(train_data, test_data=test_data,
                          categorical_columns=['A', 'B'])
     tds.categorical.encode()
 
     _ = tds.x_train
-    assert repr(tds.x_test) == repr(np.array([[2, 2], [2, 2]]))
+    with pytest.raises(ValueError):
+        # TODO Assert error message as well
+        _ = tds.x_test)
+
+
+def test_encode_with_unseen_data_succeeds_with_unk_category():
+    df = get_test_df()
+    train_data = df.iloc[:2]
+    test_data = df.iloc[2:4]
+
+    tds = TabularDataset(train_data, test_data=test_data,
+                         categorical_columns=['A', 'B'])
+    tds.categorical.encode()
+
+    _ = tds.x_train
+    assert repr(tds.x_test) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1]]))
 
 
 def test_encode_with_hashing():
@@ -95,18 +112,18 @@ def test_encode_one_hot_drop_first():
                                          [0., 1., 0., 1.]]))
 
 
-def test_encode_one_hot_no_fit():
-    df = get_test_df()
-    test_data = df.iloc[-2:]
-
-    tds = TabularDataset(df, test_data=test_data,
-                         categorical_columns=['A', 'B'])
-    tds.categorical.encode()
-    tds.categorical.one_hot()
-
-    _ = tds.x_train
-    assert repr(tds.x_test) == repr(np.array([[0., 0., 1., 0., 0., 1.],
-                                              [0., 0., 1., 0., 0., 1.]]))
+# def test_encode_one_hot_no_fit():
+#     df = get_test_df()
+#     test_data = df.iloc[-2:]
+#
+#     tds = TabularDataset(df, test_data=test_data,
+#                          categorical_columns=['A', 'B'])
+#     tds.categorical.encode()
+#     tds.categorical.one_hot()
+#
+#     _ = tds.x_train
+#     assert repr(tds.x_test) == repr(np.array([[0., 0., 1., 0., 0., 1.],
+#                                               [0., 0., 1., 0., 0., 1.]]))
 
 
 def test_encode_one_hot_with_hashing():
