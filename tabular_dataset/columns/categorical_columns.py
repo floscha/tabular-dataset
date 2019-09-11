@@ -26,8 +26,10 @@ class CategoricalColumns(AbstractColumns):
                       add_columns=add_columns)
 
     @transformation
-    def encode(self, columns: Optional[List[str]] = None):
-        return encode(encoders=self._categorical_encoders)
+    def encode(self, columns: Optional[List[str]] = None,
+               add_unk_category: bool = False):
+        return encode(encoders=self._categorical_encoders,
+                      add_unk_category=add_unk_category)
 
     @transformation
     def hash(self, columns: Optional[List[str]] = None,
