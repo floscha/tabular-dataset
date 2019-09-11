@@ -55,7 +55,7 @@ def test_encode_with_unseen_data_fails_without_unk_category():
     _ = tds.x_train
     with pytest.raises(ValueError):
         # TODO Assert error message as well
-        _ = tds.x_test)
+        _ = tds.x_test
 
 
 def test_encode_with_unseen_data_succeeds_with_unk_category():
