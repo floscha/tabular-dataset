@@ -93,12 +93,13 @@ class TabularDataset:
                              self.binary.transform(data=x_train),
                              self.categorical.transform(data=x_train)],
                             axis=1).values
-        x_test = pd.concat([self.numerical.transform(data=x_test),
-                            self.binary.transform(data=x_test),
-                            self.categorical.transform(data=x_test)],
+        x_test = pd.concat([self.numerical.transform(data=x_test, test=True),
+                            self.binary.transform(data=x_test, test=True),
+                            self.categorical.transform(data=x_test,
+                                                       test=True)],
                            axis=1).values
         y_train = self.target.transform(data=y_train).values
-        y_test = self.target.transform(data=y_test).values
+        y_test = self.target.transform(data=y_test, test=True).values
         return x_train, x_test, y_train, y_test
 
     def split(self, n_splits: int = 2, random_state: Optional[int] = None,
