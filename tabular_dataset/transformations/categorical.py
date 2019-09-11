@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional
 
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 
@@ -41,19 +42,25 @@ def impute(df: pd.DataFrame, columns: List[str], impute_values: list,
 
 @transformation
 def encode(df: pd.DataFrame, columns: List[str],
-           encoders: Dict[str, LabelEncoder], fit: bool = True) \
-           -> pd.DataFrame:
+           encoders: Dict[str, LabelEncoder], fit: bool = True,
+           add_unk_category: bool = False) -> pd.DataFrame:
     for column_name in columns:
         if fit:
             encoder = LabelEncoder()
             # FIXME Only convert columns with object type to str?
-            df[column_name] = (encoder.fit_transform(df[column_name]
-                                                     .values.astype(str)))
+            values = df[column_name].values.astype(str)
+            if add_unk_category:
+                values = np.append(values, [UNK_TOKEN])
+            df[column_name] = encoder.fit_transform(values)
+
             encoders[column_name] = encoder
         else:
             encoder = encoders[column_name]
-            df[column_name] = (encoder.transform(df[column_name]
-                                                 .values.astype(str)))
+            # Idea taken from https://stackoverflow.com/a/52505373
+            encoder_dict = dict(zip(encoder.classes_,
+                                    encoder.transform(encoder.classes_)))
+            df[column_name].apply(lambda x: encoder_dict.get(x, UNK_TOKEN))
+
     return df
 
 
