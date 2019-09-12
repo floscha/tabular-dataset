@@ -84,12 +84,13 @@ class TabularDataset:
         test_df = self.test_df
         return self.target.transform(data=test_df, test=True).values
 
-    def train_test_split(self, test_size: float = 0.1):
+    def train_test_split(self, test_size: float = 0.1, shuffle: bool = True):
         """Split the tabular dataset into random train and test subsets."""
         x_train, x_test, y_train, y_test = train_test_split(
             self.df[self.all.column_names],
             self.df[self.target.column_names],
-            test_size=test_size
+            test_size=test_size,
+            shuffle=shuffle
         )
         x_train = pd.concat([self.numerical.transform(data=x_train),
                              self.binary.transform(data=x_train),
