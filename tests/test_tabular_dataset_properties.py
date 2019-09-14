@@ -112,7 +112,6 @@ def test_getting_test_data_raises_exception_without_specified_test_data():
         _ = tds.x_test
 
 
-
 def test_num_abbreviation():
     df = get_test_df()
 
