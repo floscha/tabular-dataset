@@ -2,6 +2,7 @@ import unittest
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from tabular_dataset import TabularDataset
 
@@ -32,15 +33,34 @@ def test_encode():
     assert repr(tds.y) == repr(np.array([0, 1, 2, 0]).reshape(-1, 1))
 
 
-def test_encode_no_fit():
+def test_encode_with_unseen_data_fails_without_unk_category():
     df = get_test_df()
-    test_data = df.iloc[-2:]
+    train_data = df.iloc[:2]
+    test_data = df.iloc[2:4]
 
-    tds = TabularDataset(df, test_data=test_data, target_column='target')
+    tds = TabularDataset(train_data, test_data=test_data,
+                         target_column='target')
     tds.target.encode()
 
     _ = tds.y_train
-    assert repr(tds.y_test) == repr(np.array([2, 0]).reshape(-1, 1))
+    with pytest.raises(ValueError):
+        # TODO Assert error message as well
+        _ = tds.y_test
+
+
+def test_encode_with_unseen_data_succeeds_with_unk_category():
+    df = get_test_df()
+    train_data = df.iloc[:2]
+    test_data = df.iloc[2:4]
+
+    tds = TabularDataset(train_data, test_data=test_data,
+                         target_column='target')
+    tds.target.encode(add_unk_category=True)
+
+    _ = tds.y_train
+    # Assume the following encodings:
+    # {'<UNK>': 0, 'x': 1, 'y': 2}
+    assert repr(tds.y_test) == repr(np.array([0, 1]).reshape(-1, 1))
 
 
 def test_encode_one_hot():
@@ -61,7 +81,7 @@ def test_encode_one_hot_no_fit():
     test_data = df.iloc[-2:]
 
     tds = TabularDataset(df, test_data=test_data, target_column='target')
-    tds.target.encode()
+    tds.target.encode(add_unk_category=True)
     tds.target.one_hot()
 
     _ = tds.y_train

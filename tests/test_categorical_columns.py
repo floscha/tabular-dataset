@@ -65,10 +65,13 @@ def test_encode_with_unseen_data_succeeds_with_unk_category():
 
     tds = TabularDataset(train_data, test_data=test_data,
                          categorical_columns=['A', 'B'])
-    tds.categorical.encode()
+    tds.categorical.encode(add_unk_category=True)
 
     _ = tds.x_train
-    assert repr(tds.x_test) == repr(np.array([[0, 0], [1, 0], [1, 1], [0, 1]]))
+    # Assume the following encodings:
+    # Column 'A': {'<UNK>': 0, 'a': 1, 'b': 2}
+    # Column 'B': {'<UNK>': 0, 'c': 1}
+    assert repr(tds.x_test) == repr(np.array([[2, 0], [1, 0]]))
 
 
 def test_encode_with_hashing():
@@ -110,20 +113,6 @@ def test_encode_one_hot_drop_first():
                                          [0., 0., 1., 0.],
                                          [0., 1., 0., 1.],
                                          [0., 1., 0., 1.]]))
-
-
-# def test_encode_one_hot_no_fit():
-#     df = get_test_df()
-#     test_data = df.iloc[-2:]
-#
-#     tds = TabularDataset(df, test_data=test_data,
-#                          categorical_columns=['A', 'B'])
-#     tds.categorical.encode()
-#     tds.categorical.one_hot()
-#
-#     _ = tds.x_train
-#     assert repr(tds.x_test) == repr(np.array([[0., 0., 1., 0., 0., 1.],
-#                                               [0., 0., 1., 0., 0., 1.]]))
 
 
 def test_encode_one_hot_with_hashing():

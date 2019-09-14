@@ -132,12 +132,13 @@ def test_train_test_split():
 
     tds = TabularDataset(df, categorical_columns=['A'], target_column='target')
     tds.categorical.impute()
-    tds.categorical.encode()
+    tds.categorical.encode(add_unk_category=True)
     tds.categorical.one_hot()
-    x_train, x_test, y_train, y_test = tds.train_test_split(test_size=0.25)
+    x_train, x_test, y_train, y_test = tds.train_test_split(test_size=0.25,
+                                                            shuffle=False)
 
-    assert x_train.shape == (3, 3)
-    assert x_test.shape == (1, 3)
+    assert x_train.shape == (3, 4)
+    assert x_test.shape == (1, 4)
     assert y_train.shape == (3, 1)
     assert y_test.shape == (1, 1)
 
