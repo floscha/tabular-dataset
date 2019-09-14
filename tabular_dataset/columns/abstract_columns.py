@@ -1,5 +1,7 @@
 import inspect
-from typing import List
+from typing import List, Optional
+
+import pandas as pd
 
 
 class AbstractColumns:
@@ -19,14 +21,18 @@ class AbstractColumns:
     def __len__(self):
         return len(self.column_names)
 
-    def transform(self, test: bool = False):
-        if test:
-            if self.ds.test_df is None:
-                raise ValueError("'test_data' arguments needs to be set for " +
-                                 "TabularDataset")
-            df = self.ds.test_df
+    def transform(self, data: Optional[pd.DataFrame] = None,
+                  test: bool = False):
+        if data is not None:
+            df = data
         else:
-            df = self.ds.df
+            if test:
+                if self.ds.test_df is None:
+                    raise ValueError("'test_data' arguments needs to be set " +
+                                     "for TabularDataset")
+                df = self.ds.test_df
+            else:
+                df = self.ds.df
         df = df[self.column_names].copy()
 
         for transformation_fn in self.lineage:

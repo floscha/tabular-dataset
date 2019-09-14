@@ -18,6 +18,7 @@ class CategoricalColumns(AbstractColumns):
         self._impute_values = []  # type: list
         self._categorical_encoders = {}  # type: dict
         self._one_hot_encoders = {}  # type: dict
+        self._hash_bins = None  # type: Optional[int]
 
     @transformation
     def impute(self, columns: Optional[List[str]] = None, method: str = 'unk',
@@ -26,18 +27,23 @@ class CategoricalColumns(AbstractColumns):
                       add_columns=add_columns)
 
     @transformation
-    def encode(self, columns: Optional[List[str]] = None):
-        return encode(encoders=self._categorical_encoders)
+    def encode(self, columns: Optional[List[str]] = None,
+               add_unk_category: bool = False):
+        return encode(encoders=self._categorical_encoders,
+                      add_unk_category=add_unk_category)
 
     @transformation
     def hash(self, columns: Optional[List[str]] = None,
              bins: Optional[int] = None):
+        self._hash_bins = bins
         return hash(bins=bins)
 
     @transformation
     def one_hot(self, columns: Optional[List[str]] = None,
                 drop_first: bool = False):
-        return one_hot(encoders=self._one_hot_encoders, drop_first=drop_first)
+        return one_hot(encoders=self._one_hot_encoders,
+                       label_encoders=self._categorical_encoders,
+                       hash_bins=self._hash_bins, drop_first=drop_first)
 
     @transformation
     def counts(self, columns: Optional[List[str]] = None):

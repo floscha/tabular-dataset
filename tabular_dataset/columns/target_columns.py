@@ -11,8 +11,9 @@ class TargetColumns(AbstractColumns):
         self._one_hot_encoders = {}
 
     @transformation
-    def encode(self):
-        return encode(encoders=self._categorical_encoders)
+    def encode(self, add_unk_category: bool = False):
+        return encode(encoders=self._categorical_encoders,
+                      add_unk_category=add_unk_category)
 
     @transformation
     def one_hot(self):

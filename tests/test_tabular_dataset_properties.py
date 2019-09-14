@@ -3,6 +3,7 @@ from typing import Iterator
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from tabular_dataset import TabularDataset
 from tabular_dataset.columns import (BinaryColumns, CategoricalColumns,
@@ -100,6 +101,17 @@ def test_y_test():
     assert repr(tds.y_test) == repr(test_data[['target']].values)
 
 
+def test_getting_test_data_raises_exception_without_specified_test_data():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    with pytest.raises(ValueError):
+        # TODO Assert error message as well
+        _ = tds.x_test
+
+
 def test_num_abbreviation():
     df = get_test_df()
 
@@ -125,6 +137,22 @@ def test_cat_abbreviation():
                          categorical_columns=['C'], target_column='target')
 
     assert isinstance(tds.cat, CategoricalColumns)
+
+
+def test_train_test_split():
+    df = get_test_df()
+
+    tds = TabularDataset(df, categorical_columns=['A'], target_column='target')
+    tds.categorical.impute()
+    tds.categorical.encode(add_unk_category=True)
+    tds.categorical.one_hot()
+    x_train, x_test, y_train, y_test = tds.train_test_split(test_size=0.25,
+                                                            shuffle=False)
+
+    assert x_train.shape == (3, 4)
+    assert x_test.shape == (1, 4)
+    assert y_train.shape == (3, 1)
+    assert y_test.shape == (1, 1)
 
 
 def test_k_fold_cross_validation():

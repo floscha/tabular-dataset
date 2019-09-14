@@ -2,7 +2,7 @@ from typing import List, Optional
 
 import numpy as np
 import pandas as pd
-from sklearn.model_selection import KFold
+from sklearn.model_selection import KFold, train_test_split
 
 from tabular_dataset.columns import (AllColumns,  BinaryColumns,
                                      CategoricalColumns,  NumericalColumns,
@@ -10,7 +10,7 @@ from tabular_dataset.columns import (AllColumns,  BinaryColumns,
 
 
 class TabularDataset:
-    def __init__(self, data, test_data: Optional[pd.DataFrame] = pd.DataFrame,
+    def __init__(self, data, test_data: Optional[pd.DataFrame] = None,
                  numerical_columns: Optional[pd.DataFrame] = None,
                  binary_columns: Optional[pd.DataFrame] = None,
                  categorical_columns: Optional[pd.DataFrame] = None,
@@ -73,14 +73,37 @@ class TabularDataset:
 
     @property
     def x_test(self) -> np.array:
-        return pd.concat([self.numerical.transform(test=True),
-                          self.binary.transform(test=True),
-                          self.categorical.transform(test=True)],
+        test_df = self.test_df
+        return pd.concat([self.numerical.transform(data=test_df, test=True),
+                          self.binary.transform(data=test_df, test=True),
+                          self.categorical.transform(data=test_df, test=True)],
                          axis=1).values
 
     @property
     def y_test(self) -> np.array:
-        return self.target.transform(test=True).values
+        test_df = self.test_df
+        return self.target.transform(data=test_df, test=True).values
+
+    def train_test_split(self, test_size: float = 0.1, shuffle: bool = True):
+        """Split the tabular dataset into random train and test subsets."""
+        x_train, x_test, y_train, y_test = train_test_split(
+            self.df[self.all.column_names],
+            self.df[self.target.column_names],
+            test_size=test_size,
+            shuffle=shuffle
+        )
+        x_train = pd.concat([self.numerical.transform(data=x_train),
+                             self.binary.transform(data=x_train),
+                             self.categorical.transform(data=x_train)],
+                            axis=1).values
+        x_test = pd.concat([self.numerical.transform(data=x_test, test=True),
+                            self.binary.transform(data=x_test, test=True),
+                            self.categorical.transform(data=x_test,
+                                                       test=True)],
+                           axis=1).values
+        y_train = self.target.transform(data=y_train).values
+        y_test = self.target.transform(data=y_test, test=True).values
+        return x_train, x_test, y_train, y_test
 
     def split(self, n_splits: int = 2, random_state: Optional[int] = None,
               shuffle: bool = False):
