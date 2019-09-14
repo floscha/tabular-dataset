@@ -10,7 +10,7 @@ from tabular_dataset.columns import (AllColumns,  BinaryColumns,
 
 
 class TabularDataset:
-    def __init__(self, data, test_data: Optional[pd.DataFrame] = pd.DataFrame,
+    def __init__(self, data, test_data: Optional[pd.DataFrame] = None,
                  numerical_columns: Optional[pd.DataFrame] = None,
                  binary_columns: Optional[pd.DataFrame] = None,
                  categorical_columns: Optional[pd.DataFrame] = None,

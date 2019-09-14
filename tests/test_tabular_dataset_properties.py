@@ -3,6 +3,7 @@ from typing import Iterator
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from tabular_dataset import TabularDataset
 from tabular_dataset.columns import (BinaryColumns, CategoricalColumns,
@@ -98,6 +99,18 @@ def test_y_test():
                          target_column='target')
 
     assert repr(tds.y_test) == repr(test_data[['target']].values)
+
+
+def test_getting_test_data_raises_exception_without_specified_test_data():
+    df = get_test_df()
+
+    tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
+                         categorical_columns=['C'], target_column='target')
+
+    with pytest.raises(ValueError):
+        # TODO Assert error message as well
+        _ = tds.x_test
+
 
 
 def test_num_abbreviation():
