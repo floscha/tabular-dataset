@@ -9,10 +9,6 @@ from tabular_dataset.columns import (AllColumns,  BinaryColumns,
                                      TargetColumns)
 
 
-def _infer_column_type():
-    pass
-
-
 class TabularDataset:
     def __init__(self, data, test_data: Optional[pd.DataFrame] = None,
                  numerical_columns: Optional[List[str]] = None,
