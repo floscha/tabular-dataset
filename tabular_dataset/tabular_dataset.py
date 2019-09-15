@@ -9,30 +9,67 @@ from tabular_dataset.columns import (AllColumns,  BinaryColumns,
                                      TargetColumns)
 
 
+def _infer_column_type():
+    pass
+
+
 class TabularDataset:
     def __init__(self, data, test_data: Optional[pd.DataFrame] = None,
-                 numerical_columns: Optional[pd.DataFrame] = None,
-                 binary_columns: Optional[pd.DataFrame] = None,
-                 categorical_columns: Optional[pd.DataFrame] = None,
+                 numerical_columns: Optional[List[str]] = None,
+                 binary_columns: Optional[List[str]] = None,
+                 categorical_columns: Optional[List[str]] = None,
                  target_column: Optional[str] = None,
-                 target_columns: Optional[List[str]] = None):
+                 target_columns: Optional[List[str]] = None,
+                 infer_column_types: bool = False):
         self.df = data  # TODO Copy data to avoid changing the original object?
         self.test_df = test_data
 
-        self.numerical = NumericalColumns(self, numerical_columns or [])
-        self.binary = BinaryColumns(self, binary_columns or [])
-        self.categorical = CategoricalColumns(self, categorical_columns or [])
-
-        self.all = AllColumns(self)
+        numerical_columns = numerical_columns or []
+        binary_columns = binary_columns or []
+        categorical_columns = categorical_columns or []
 
         if target_column:
             if target_columns:
                 raise ValueError("Only 'target_column' or 'target_columns' " +
                                  "can be set")
             else:
-                self.target = TargetColumns(self, [target_column])
-        elif target_columns:
-            self.target = TargetColumns(self, target_columns)
+                target_columns = [target_column]
+        else:
+            if not target_columns:
+                target_columns = []
+
+        specified_columns = set(numerical_columns + binary_columns +
+                                categorical_columns + target_columns)
+
+        if infer_column_types:
+            non_specified_columns = data.drop(columns=specified_columns)
+            column_types = non_specified_columns.dtypes
+            num_unique = non_specified_columns.nunique()
+
+            foo = pd.concat([column_types, num_unique], axis=1)
+            for column_name, (data_type, unique_values) in foo.iterrows():
+                if data_type.name == 'bool':
+                    binary_columns.append(column_name)
+                elif data_type.name in ('int64', 'float64'):
+                    if unique_values == 2:
+                        binary_columns.append(column_name)
+                    elif unique_values > 2:
+                        numerical_columns.append(column_name)
+                    else:
+                        print(f"Warning: Columns {column_name} has " +
+                              f"{unique_values} unique values and therefore " +
+                              "no predictive power")
+                else:
+                    # TODO Also handle dates later
+                    categorical_columns.append(column_name)
+
+        self.numerical = NumericalColumns(self, numerical_columns)
+        self.binary = BinaryColumns(self, binary_columns)
+        self.categorical = CategoricalColumns(self, categorical_columns)
+
+        self.all = AllColumns(self)
+
+        self.target = TargetColumns(self, target_columns)
 
     def __repr__(self) -> str:
         s = [f'TabularDataset ({self.df.shape[0]} rows)']
