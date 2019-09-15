@@ -19,6 +19,14 @@ def get_test_df():
     })
 
 
+def test_setting_both_target_column_and_target_columns_raises_exception():
+    df = get_test_df()
+
+    with pytest.raises(ValueError):
+        TabularDataset(df, target_column='target',
+                       target_columns=['target'])
+
+
 def test_infer_columns_types():
     df = pd.DataFrame({
         'boolean_bin': [False, False, True, True],
