@@ -49,12 +49,8 @@ class TabularDataset:
                 elif data_type.name in ('int64', 'float64'):
                     if unique_values == 2:
                         binary_columns.append(column_name)
-                    elif unique_values > 2:
-                        numerical_columns.append(column_name)
                     else:
-                        print(f"Warning: Columns {column_name} has " +
-                              f"{unique_values} unique values and therefore " +
-                              "no predictive power")
+                        numerical_columns.append(column_name)
                 else:
                     # TODO Also handle dates later
                     categorical_columns.append(column_name)
