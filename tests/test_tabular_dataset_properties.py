@@ -19,6 +19,44 @@ def get_test_df():
     })
 
 
+def test_setting_both_target_column_and_target_columns_raises_exception():
+    df = get_test_df()
+
+    with pytest.raises(ValueError):
+        TabularDataset(df, target_column='target',
+                       target_columns=['target'])
+
+
+def test_infer_columns_types():
+    df = pd.DataFrame({
+        'boolean_bin': [False, False, True, True],
+        'numeric_bin': [0, 0, 1, 1],
+        'cat': list('abcd'),
+        'num': [1, 2, 3, np.nan]
+    })
+
+    tds = TabularDataset(df, infer_column_types=True)
+
+    assert tds.bin.column_names == ['boolean_bin', 'numeric_bin']
+    assert tds.cat.column_names == ['cat']
+    assert tds.num.column_names == ['num']
+
+
+def test_infer_columns_types_with_some_column_specified():
+    """When manually specifying 'numeric_bin_2' as a numerical column, it
+    should not be automatically inferred as a binary column."""
+    df = pd.DataFrame({
+        'numeric_bin_1': [0, 0, 1, 1],
+        'numeric_bin_2': [0, 0, 1, 1]
+    })
+
+    tds = TabularDataset(df, numerical_columns=['numeric_bin_2'],
+                         infer_column_types=True)
+
+    assert tds.bin.column_names == ['numeric_bin_1']
+    assert tds.num.column_names == ['numeric_bin_2']
+
+
 def test_repr():
     df = get_test_df()
 
