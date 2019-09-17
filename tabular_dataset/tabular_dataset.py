@@ -53,8 +53,9 @@ class TabularDataset:
                         binary_columns.append(column_name)
                     else:
                         numerical_columns.append(column_name)
+                elif data_type.name == 'datetime64[ns]':
+                    datetime_columns.append(column_name)
                 else:
-                    # TODO Also handle dates later
                     categorical_columns.append(column_name)
 
         self.numerical = NumericalColumns(self, numerical_columns)
