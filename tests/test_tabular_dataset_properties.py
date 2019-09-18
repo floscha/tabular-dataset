@@ -1,3 +1,4 @@
+import datetime
 import unittest
 from typing import Iterator
 
@@ -32,7 +33,8 @@ def test_infer_columns_types():
         'boolean_bin': [False, False, True, True],
         'numeric_bin': [0, 0, 1, 1],
         'cat': list('abcd'),
-        'num': [1, 2, 3, np.nan]
+        'num': [1, 2, 3, np.nan],
+        'dt': [datetime.datetime(2018, 1, 1)] * 4
     })
 
     tds = TabularDataset(df, infer_column_types=True)
@@ -40,6 +42,7 @@ def test_infer_columns_types():
     assert tds.bin.column_names == ['boolean_bin', 'numeric_bin']
     assert tds.cat.column_names == ['cat']
     assert tds.num.column_names == ['num']
+    assert tds.dt.column_names == ['dt']
 
 
 def test_infer_columns_types_with_some_column_specified():
@@ -61,13 +64,15 @@ def test_repr():
     df = get_test_df()
 
     tds = TabularDataset(df, numerical_columns=['A'], binary_columns=['B'],
-                         categorical_columns=['C'], target_column='target')
+                         categorical_columns=['C'], datetime_columns=['D'],
+                         target_column='target')
     repr_output = repr(tds)
 
     assert repr_output == ("TabularDataset (4 rows)\n" +
                            "\tNumerical Columns: ['A']\n" +
                            "\tBinary Columns: ['B']\n" +
                            "\tCategorical Columns: ['C']\n" +
+                           "\tDatetime Columns: ['D']\n" +
                            "\tTarget Column: 'target'")
 
 

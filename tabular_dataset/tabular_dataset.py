@@ -5,8 +5,8 @@ import pandas as pd
 from sklearn.model_selection import KFold, train_test_split
 
 from tabular_dataset.columns import (AllColumns,  BinaryColumns,
-                                     CategoricalColumns,  NumericalColumns,
-                                     TargetColumns)
+                                     CategoricalColumns, DatetimeColumns,
+                                     NumericalColumns, TargetColumns)
 
 
 class TabularDataset:
@@ -14,6 +14,7 @@ class TabularDataset:
                  numerical_columns: Optional[List[str]] = None,
                  binary_columns: Optional[List[str]] = None,
                  categorical_columns: Optional[List[str]] = None,
+                 datetime_columns: Optional[List[str]] = None,
                  target_column: Optional[str] = None,
                  target_columns: Optional[List[str]] = None,
                  infer_column_types: bool = False):
@@ -23,6 +24,7 @@ class TabularDataset:
         numerical_columns = numerical_columns or []
         binary_columns = binary_columns or []
         categorical_columns = categorical_columns or []
+        datetime_columns = datetime_columns or []
 
         if target_column:
             if target_columns:
@@ -51,13 +53,15 @@ class TabularDataset:
                         binary_columns.append(column_name)
                     else:
                         numerical_columns.append(column_name)
+                elif data_type.name == 'datetime64[ns]':
+                    datetime_columns.append(column_name)
                 else:
-                    # TODO Also handle dates later
                     categorical_columns.append(column_name)
 
         self.numerical = NumericalColumns(self, numerical_columns)
         self.binary = BinaryColumns(self, binary_columns)
         self.categorical = CategoricalColumns(self, categorical_columns)
+        self.datetime = DatetimeColumns(self, datetime_columns)
 
         self.all = AllColumns(self)
 
@@ -71,6 +75,8 @@ class TabularDataset:
             s.append(f'\tBinary Columns: {self.binary.column_names}')
         if self.categorical:
             s.append(f'\tCategorical Columns: {self.categorical.column_names}')
+        if self.datetime:
+            s.append(f'\tDatetime Columns: {self.datetime.column_names}')
         if self.target:
             if len(self.target) == 1:
                 s.append(f'\tTarget Column: {self.target.column_names[0]!r}')
@@ -83,10 +89,7 @@ class TabularDataset:
 
     @property
     def x(self) -> np.array:
-        return pd.concat([self.numerical.transform(),
-                          self.binary.transform(),
-                          self.categorical.transform()],
-                         axis=1).values
+        return self.all.transform().values
 
     @property
     def y(self) -> np.array:
@@ -103,10 +106,7 @@ class TabularDataset:
     @property
     def x_test(self) -> np.array:
         test_df = self.test_df
-        return pd.concat([self.numerical.transform(data=test_df, test=True),
-                          self.binary.transform(data=test_df, test=True),
-                          self.categorical.transform(data=test_df, test=True)],
-                         axis=1).values
+        return self.all.transform(data=test_df, test=True).values
 
     @property
     def y_test(self) -> np.array:
@@ -121,15 +121,8 @@ class TabularDataset:
             test_size=test_size,
             shuffle=shuffle
         )
-        x_train = pd.concat([self.numerical.transform(data=x_train),
-                             self.binary.transform(data=x_train),
-                             self.categorical.transform(data=x_train)],
-                            axis=1).values
-        x_test = pd.concat([self.numerical.transform(data=x_test, test=True),
-                            self.binary.transform(data=x_test, test=True),
-                            self.categorical.transform(data=x_test,
-                                                       test=True)],
-                           axis=1).values
+        x_train = self.all.transform(data=x_train).values
+        x_test = self.all.transform(data=x_test, test=True).values
         y_train = self.target.transform(data=y_train).values
         y_test = self.target.transform(data=y_test, test=True).values
         return x_train, x_test, y_train, y_test
@@ -168,3 +161,7 @@ class TabularDataset:
     @property
     def cat(self) -> CategoricalColumns:
         return self.categorical
+
+    @property
+    def dt(self) -> DatetimeColumns:
+        return self.datetime
