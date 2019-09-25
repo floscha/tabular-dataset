@@ -20,7 +20,6 @@ def get_df_with_missing_values():
     return pd.DataFrame({'dt': ['1/1/2018', '1/1/2018', '1/2/2018', None]})
 
 
-
 def test_column_names_are_correctly_set():
     df = get_test_df()
 
